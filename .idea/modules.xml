@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/fge.iml" filepath="$PROJECT_DIR$/fge.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/fge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/fge.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/fge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/fge.test.iml" />
+    </modules>
+  </component>
+</project>
