@@ -7,7 +7,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		template : _.template(ProfileHTML),
 		profile : new Profile(),
 		events: {
-            "submit" : "login"
+            "click .btn-primary" : "save"
          },
 
 		initialize : function(root) {
@@ -19,9 +19,11 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 
 		render: function() {
 			this.$el.html(this.template());
-			$('#dataTable').DataTable();
 		},
 
+		save: function() {
+			bootbox.alert("Mock save");
+		}
 	});
 
 	return ProfileView;
