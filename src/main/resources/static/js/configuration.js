@@ -1,5 +1,6 @@
 require.config({
 	paths : {
+		'moment'				: 'lib/moment/moment.min',
 		'text'					: 'lib/requirejs/text',
 		'underscore'			: 'lib/underscore/underscore-min',
 		'jquery'				: 'lib/jquery/jquery.min',
@@ -12,11 +13,14 @@ require.config({
 		'jquery.easing'			: 'lib/jquery-easing/jquery.easing.min',
 		'jquery.blockUI'		: 'lib/jquery/jquery.blockUI',
 		'jquery.dataTables'		: 'lib/datatables/jquery.dataTables',
+		'jquery.skedTape'		: 'lib/jquery-sked-tape-master/jquery.skedTape',
 		'spin'					: 'lib/spin/spin.min',
 		'dataTables.bootstrap4'	: 'lib/datatables/dataTables.bootstrap4',
 	},
 	shim : {
-		'underscore' : {
+		'moment': {
+            exports: 'moment'
+        }, 'underscore' : {
 			exports : '_'
 		}, 'jquery' : {
 			exports : '$'
@@ -35,6 +39,8 @@ require.config({
 		}, 'jquery.easing' : {
 			deps : [ 'jquery']
 		}, 'jquery.dataTables' : {
+			deps : [ 'jquery' ]
+		}, 'jquery.skedTape' : {
 			deps : [ 'jquery' ]
 		}, 'dataTables.bootstrap4' : {
 			deps : [ 'jquery', 'jquery.dataTables', 'bootstrap4.bundle' ]

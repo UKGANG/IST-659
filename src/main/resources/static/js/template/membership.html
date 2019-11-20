@@ -1,21 +1,63 @@
-<div class="card mb-1" style="width:600px;">
+<div class="card mb-1">
 	<div class="card-header">Profile</div>
 	<div class="card-body">
 		<form id="basic-form" class="form-horizontal">
 			<div class="row">
-				<div class="col-md-6 col-md-offset-3 text-left">
+
+				<div class="col-md-4 col-md-offset-3 text-left">
 					<div class="form-group">
-						<label for="firstName">First Name:</label>
+						<label class="control-label-small required" for="firstName">First Name:</label>
 						<input id="firstName" class="form-control" type="text" value="{{=firstName}}" >
 					</div>
 					<div class="form-group">
-						<label for="lastName">Last Name:</label>
+						<label class="control-label-small required" for="email">Email:</label>
+						<input id="email" class="form-control" type="text" value="{{=email}}" >
+					</div>
+					<div class="form-group">
+						<label class="control-label-small required" for="gender">Gender:</label>
+						<input id="gender" class="form-control" type="text" value="{{=gender}}" >
+					</div>
+					<div class="form-group">
+						<label class="control-label-small required" for="dob">DOB:</label>
+						<input id="dob" class="form-control" type="text" value="{{=dob}}" >
+					</div>
+				</div>
+
+				<div class="col-md-4 col-md-offset-3 text-left">
+					<div class="form-group">
+						<label class="control-label-small required" for="middleName">Middle Name:</label>
+						<input id="middleName" class="form-control" type="text" value="{{=middleName}}" >
+					</div>
+					<div class="form-group">
+						<label class="control-label-small required" for="password">Password:</label>
+						<input id="password" class="form-control" type="text" value="password" >
+					</div>
+					<div class="form-group">
+						<label class="control-label-small required" for="phoneNo">Phone No:</label>
+						<input id="phoneNo" class="form-control" type="text" value="{{=phoneNo}}" >
+					</div>
+				</div>
+
+				<div class="col-md-4 col-md-offset-3 text-left">
+					<div class="form-group">
+						<label class="control-label-small required" for="lastName">Last Name:</label>
 						<input id="lastName" class="form-control" type="text" value="{{=lastName}}" >
+					</div>
+					<div class="form-group">
+						<label class="control-label-small required" for="repeat">Repeat Password:</label>
+						<input id="repeat" class="form-control" type="text" value="{{=repeat}}" >
+					</div>
+					<div class="form-group">
+						<label class="control-label-small required" for="ssn">SSN:</label>
+						<input id="ssn" class="form-control" type="text" value="{{=ssn}}" >
+					</div>
+					<div class="form-group" style="margin-top: 10%; margin-left: 40%;">
+						<button type="submit" class="btn-lg btn-primary" id="save-btn">Save</button>
 					</div>
 				</div>
 			</div>
+
 		</form>
 	</div>
-	<div class="card-footer">Syracuse University</div>
 </div>
 

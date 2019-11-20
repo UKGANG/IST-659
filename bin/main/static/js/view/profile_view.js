@@ -1,17 +1,17 @@
 define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTables', 'bootbox'
-        , 'model/membership', 'text!template/membership.html'
+        , 'model/profile', 'text!template/profile.html'
 		], function($, _, Backbone, bootstrap4, dataTable, bootbox
-		, Membership, MembershipHTML) {
-	var MembershipView = Backbone.View.extend({
+		, Profile, ProfileHTML) {
+	var ProfileView = Backbone.View.extend({
 		el : null,
-		template : _.template(MembershipHTML),
-		membership : new Membership(),
+		template : _.template(ProfileHTML),
+		profile : new Profile(),
 		events: {
             "submit" : "login"
          },
 
 		initialize : function(root) {
-			console.log('Membership status initialized');
+			console.log('Profile status initialized');
 			this.$el = root;
 			this.render();
 			
@@ -24,6 +24,6 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 
 	});
 
-	return MembershipView;
+	return ProfileView;
 
 });

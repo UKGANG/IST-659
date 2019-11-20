@@ -80,6 +80,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox'
 			})
 			$(e.currentTarget).addClass("active");
 			var module = $(e.currentTarget).attr("id");
+			$("#ui-datepicker-div").remove();
 			switch(module) {
 				case "reservation":			  
 					new ReservationView(this.container);
@@ -97,7 +98,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox'
 					var errMsg = "Missing module: " + module;
 					console.log(errMsg);
 					throw errMsg;
-			} 
+			}
 		},
 	});
 
