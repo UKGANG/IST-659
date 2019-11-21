@@ -14,7 +14,6 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		initialize : function(root) {
 			console.log('User Group status initialized');
 			this.$el = root;
-			this.render();
 			
 		},
 

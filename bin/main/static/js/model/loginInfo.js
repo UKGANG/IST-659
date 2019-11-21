@@ -1,6 +1,6 @@
 define([ 'backbone'], function(Backbone) {
     var LoginInfo = Backbone.Model.extend({
-        //urlRoot: "/rest/monitor/trackings",
+        url: "/rest/monitor/trackings",
         idAttribute: "rid",
         defaults : function() {
             return {

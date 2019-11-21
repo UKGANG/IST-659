@@ -54,7 +54,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'bootbox'
 		            "targets": 0,
 		            "data": null,
 		            "defaultContent": 
-		            	"<a class='form-control-sm bg-orange' href='#' id='add_btn' class='btn bg-orange'>" +
+		            	"<a class='form-control form-control-sm bg-orange' href='#' id='remove_btn' class='btn bg-orange'>" +
 		            	"<i class='fas fa-user-minus'></i> Remove" +
 		            	"</a>"
 		        } ]

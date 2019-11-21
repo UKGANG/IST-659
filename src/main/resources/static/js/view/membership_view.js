@@ -16,7 +16,6 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		initialize : function(root) {
 			console.log('Membership status initialized');
 			this.$el = root;
-			this.render();
 			
 		},
 

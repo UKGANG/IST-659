@@ -17,7 +17,6 @@ define([ 'jquery', 'underscore', 'backbone'
 		initialize : function(root) {
 			console.log('Reservation status initialized');
 			this.$el = root;
-			this.render();
 			_.bindAll(this, "showCalendar");
 
 		},

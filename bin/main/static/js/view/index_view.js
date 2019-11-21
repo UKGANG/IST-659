@@ -26,8 +26,25 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox', 'cspinner'
 			 * 	if false, boost jquery validation
 			 * 	else, login
 			 */
-			// CSpinner.start();
-			//bootbox.alert("This is a test")
+//			this.loginInfo.fetch({
+////                data: {
+////                    userName: textCriteria,
+////                    password: endDate,
+////                },
+//                type: 'POST',
+//                success: (function (model) {
+//                    that.render();
+//                    CSpinner.stop();
+//                }),
+//                error: (function (error) {
+//                    CSpinner.stop();
+//                    that.bootboxWrapper.alert("Fetch tracking list failed, please try again later!");
+//                })
+//            });
+			this.success();
+		}, 
+
+		success: function() {
 			this.header.animate({ marginLeft: '-100%' }, {"duration":400, "queue": false}, function() {
                 $(this).hide();
             });

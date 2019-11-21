@@ -19,6 +19,11 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox'
 		template : _.template(DashboardHTML),
 		dashboard : new Dashboard(),
 		container: null,
+		reservationView: null,
+		rentalView: null,
+		maintenanceView: null,
+		membershipView: null,
+		pageAccessView: null,
 		events: {
 			"click #wrapper .nav-item" : "redirect"
 		},
@@ -70,8 +75,13 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox'
 			});
 
 			this.container = $(".container-fluid");
-			new ReservationView(this.container)
-			
+
+			this.reservationView = new ReservationView(this.container);
+			this.rentalView = new RentalView(this.container);
+			this.maintenanceView = new MaintenanceView(this.container);
+			this.membershipView = new MembershipView(this.container);
+			this.pageAccessView = new PageAccessView(this.container);
+			this.reservationView.render();
 			
 			this.$el.fadeIn(400);
 		},
@@ -85,19 +95,19 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox'
 			$("#ui-datepicker-div").remove();
 			switch(module) {
 				case "reservation":
-					new ReservationView(this.container);
+					this.reservationView.render();
 					break;
 				case "rental":
-					new RentalView(this.container);
+					this.rentalView.render();
 					break;
 				case "maintenance":
-					new MaintenanceView(this.container);
+					this.maintenanceView.render();
 					break;
 				case "membership":
-					new MembershipView(this.container);
+					this.membershipView.render();
 					break;
 				case "page_access":
-					new PageAccessView(this.container);
+					this.pageAccessView.render();
 					break;
 				default:
 					var errMsg = "Missing module: " + module;
