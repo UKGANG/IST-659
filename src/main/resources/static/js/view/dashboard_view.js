@@ -4,6 +4,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox'
         , 'view/rental_view'
         , 'view/maintenance_view'
         , 'view/membership_view'
+        , 'view/page_access_view'
         , 'text!template/dashboard.html'
 		], function($, _, Backbone, bootbox
 		, Dashboard
@@ -11,6 +12,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox'
 		, RentalView
 		, MaintenanceView
 		, MembershipView
+		, PageAccessView
 		, DashboardHTML) {
 	var DashboardView = Backbone.View.extend({
 		el : null,
@@ -82,7 +84,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox'
 			var module = $(e.currentTarget).attr("id");
 			$("#ui-datepicker-div").remove();
 			switch(module) {
-				case "reservation":			  
+				case "reservation":
 					new ReservationView(this.container);
 					break;
 				case "rental":
@@ -93,6 +95,9 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox'
 					break;
 				case "membership":
 					new MembershipView(this.container);
+					break;
+				case "page_access":
+					new PageAccessView(this.container);
 					break;
 				default:
 					var errMsg = "Missing module: " + module;

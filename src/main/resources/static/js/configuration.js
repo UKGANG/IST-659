@@ -14,6 +14,7 @@ require.config({
 		'jquery.blockUI'		: 'lib/jquery/jquery.blockUI',
 		'jquery.dataTables'		: 'lib/datatables/jquery.dataTables',
 		'jquery.skedTape'		: 'lib/jquery-sked-tape-master/jquery.skedTape',
+		'jquery.autocomplete'	: 'lib/EasyAutocomplete-1.3.5/jquery.easy-autocomplete.min',
 		'spin'					: 'lib/spin/spin.min',
 		'dataTables.bootstrap4'	: 'lib/datatables/dataTables.bootstrap4',
 	},
@@ -41,6 +42,8 @@ require.config({
 		}, 'jquery.dataTables' : {
 			deps : [ 'jquery' ]
 		}, 'jquery.skedTape' : {
+			deps : [ 'jquery' ]
+		}, 'jquery.autocomplete' : {
 			deps : [ 'jquery' ]
 		}, 'dataTables.bootstrap4' : {
 			deps : [ 'jquery', 'jquery.dataTables', 'bootstrap4.bundle' ]

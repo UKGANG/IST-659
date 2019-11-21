@@ -13,12 +13,22 @@
 	<div class="card-header">Select a date</div>
 	<div class="card-body">
 		<div class="row" style="margin-left: -0.2%;!important">
-			<div class="input-group mb-3 input-group-sm">
-				<input id="date" class="form-control-sm" type="text" aria-label="{{=date}}"
-				 	style="cursor: pointer" placeholder="YYYY-MM-DD" readonly>
-				<div id="date_append" class="input-group-append" style="cursor: pointer">
-					<span class="input-group-text"><i class="fas fa-fw fa-calendar-alt" ></i></span>
+			<div class="col-md-3">
+				<div class="input-group">
+					<input id="date" class="form-control-sm" type="text" aria-label="{{=date}}"
+					 	style="cursor: pointer" placeholder="YYYY-MM-DD" readonly>
+					<div id="date_append" class="input-group-append" style="cursor: pointer">
+						<span class="input-group-text"><i class="fas fa-fw fa-calendar-alt" ></i></span>
+					</div>
 				</div>
+			</div>
+			<div class="col-md-3">
+				<a href="#" id="reserve_btn" class="btn bg-orange"><i class="fas fa-handshake"></i> Reserve</a>
+			</div>
+			<div class="col-md-3">
+				<a href="#" id="check_in_btn" class="btn bg-orange"><i class="fas fa-handshake"></i> Check In</a>
+			</div>
+			<div class="col-md-3">
 			</div>
 		</div>
 	</div>
