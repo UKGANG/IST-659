@@ -13,35 +13,38 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox', 'cspinner'
 		template : _.template(LoginHTML),
 		loginInfo : new LoginInfo(),
 		events: {
-			"submit" : "login"
+			"submit" : "login",
+			"change #userName": "setUserName",
+			"change #password": "setPassword"
 		},
 
+		setUserName: function(e) {
+			this.loginInfo.set('userName', $(e.currentTarget).val());
+		},
+
+		setPassword: function(e) {
+			this.loginInfo.set('password', $(e.currentTarget).val());
+		},
+		
+		
 		initialize : function() {
 			console.log('Index page initialized');
-			this.$el.html(this.template());
+			this.$el.html(this.template({"loginInfo": this.loginInfo}));
 		},
 
 		login : function() {
-			/** Access rest,
-			 * 	if false, boost jquery validation
-			 * 	else, login
-			 */
-//			this.loginInfo.fetch({
-////                data: {
-////                    userName: textCriteria,
-////                    password: endDate,
-////                },
-//                type: 'POST',
-//                success: (function (model) {
-//                    that.render();
-//                    CSpinner.stop();
-//                }),
-//                error: (function (error) {
-//                    CSpinner.stop();
-//                    that.bootboxWrapper.alert("Fetch tracking list failed, please try again later!");
-//                })
-//            });
-			this.success();
+			var that = this;
+			this.loginInfo.fetch({
+                data: this.loginInfo.toJSON(),
+                type: 'GET',
+                success: (function (model) {
+                    that.success();
+                }),
+                error: (function (error) {
+                    console.log(error);
+                    bootbox.alert("Login failed");
+                })
+            });
 		}, 
 
 		success: function() {
@@ -55,7 +58,6 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox', 'cspinner'
 			var that = $("body");
 			setTimeout(function () {
 				new DashboardView(that);
-				// CSpinner.stop();
 			}, 1000);
 		}
 	});
