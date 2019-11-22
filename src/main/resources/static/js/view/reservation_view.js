@@ -1,21 +1,42 @@
 define([ 'jquery', 'underscore', 'backbone'
-	, 'bootstrap4.bundle', 'bootbox'
+	, 'bootstrap4.bundle', 'bootbox', 'moment'
 	, 'jquery.ui', 'jquery.skedTape'
-        , 'model/reservation', 'text!template/reservation.html'
+	, 'collection/courts', 'model/reservation_batch'
+	, 'model/reservation', 'collection/reservations'
+	, 'text!template/reservation.html'
 		], function($, _, Backbone
-				, bootstrap4, bootbox
+				, bootstrap4, bootbox, moment
 				, jqueryUI, jquerySkedTape
-				, Reservation, ReservationHTML) {
+				, Courts, ReservationBatch
+				, Reservation, Reservations
+				, ReservationHTML) {
 	var ReservationView = Backbone.View.extend({
 		el : null,
 		template : _.template(ReservationHTML),
+		reservationDate: new Date(),
+		reservations : new Reservations(),
+		courts : new Courts(),
 		reservation : new Reservation(),
 		events: {
-            "click #date_append" : "showCalendar"
-         },
+			"click #reserve_btn" : "reserve",
+			"click #check_in_btn" : "checkIn",
+            "click #date_append" : "showCalendar",
+            "change #reservationCode": "setReservationCode",
+            "change #date": "setEmail",
+			"change #password": "setPassword"
+        },
+
+        setReservationCode: function(e) {
+        	this.reservation.set("reservationCode", $(e.currentTarget).val());
+        },
+
+        setDate: function(e) {
+			this.reservationDate = $(e.currentTarget).val();
+		},
 
 		initialize : function(root) {
 			console.log('Reservation status initialized');
+			var that = this;
 			this.$el = root;
 			_.bindAll(this, "showCalendar");
 
@@ -29,10 +50,49 @@ define([ 'jquery', 'underscore', 'backbone'
 			    	that.buildSlot(new Date(Date.parse(dateText)));
 			    }
 			});
-			$("#date").datepicker('setDate', new Date());
+			$("#date").datepicker('setDate', this.reservationDate);
 			var date = $("#date").datepicker("getDate");
-			this.buildSlot(date);
+			var buildSlotFunc = function() {
+				that.buildSlot(date);
+			}
+			var retrieveDailyReservationFunc = function() {
+				that.retrieveDailyReservation(buildSlotFunc);
+			}
+			this.retrieveCourts(retrieveDailyReservationFunc);
 			
+		},
+
+		retrieveCourts : function(successFunc) {
+			this.courts.fetch({
+                type: 'GET',
+                success: (function (model) {
+                	successFunc();
+                }),
+                error: (function (error) {
+                    console.log(error);
+                    bootbox.alert("Retrieve courts failed");
+                })
+            });
+		},
+
+		retrieveDailyReservation : function(successFunc) {
+			var that = this;
+			this.reservations.fetch({
+				data: {
+					date: moment(that.reservationDate).format("YYYY-MM-DD")
+				},
+                type: 'GET',
+                success: (function (model) {
+                	that.reservations.each(function(e) {
+                		e.set("cid", e.cid);
+                	})
+                	successFunc();
+                }),
+                error: (function (error) {
+                    console.log(error);
+                    bootbox.alert("Retrieve reservation failed");
+                })
+            })
 		},
 
 		showCalendar: function() {
@@ -45,6 +105,10 @@ define([ 'jquery', 'underscore', 'backbone'
 
 		buildSlot: function(date) {
 			var that = this;
+			var events = that.reservations.toJSON();
+			events.forEach(function (e) {
+				e.userData = {cid: e.cid};
+			})
 			var $sked = $('#container').skedTape({
 			    caption: 'Courts',
 			    start: that.setHour(date, 9, 0),
@@ -52,8 +116,9 @@ define([ 'jquery', 'underscore', 'backbone'
 			    showEventTime: true,     // Whether to show event start-end time
 			    showEventDuration: true, // Whether to show event duration
 			    zoom: 0.5,
-			    locations: that.buildLocation(),
-			    events: that.buildEvent(),
+			    locations: that.courts.toJSON(),
+			    //events: that.buildEvent(),
+			    events: events,
 			    formatters: {
 			        date: function (date) {
 			            return $.fn.skedTape.format.date(date, 'l', '.');
@@ -70,23 +135,29 @@ define([ 'jquery', 'underscore', 'backbone'
 
 
 			$sked.on('event:click.skedtape', function(e/*, api*/) {
+				that.reservations.remove(e.detail.event.userData.cid);
 			    $sked.skedTape('removeEvent', e.detail.event.id);
 			});
 
 			$sked.on('timeline:click.skedtape', function(e/*, api*/) {
 				var h = e.detail.date.getHours();
+				var reservation = new Reservation();
+				//reservation.set("cid")
+				reservation.set("name", "Random name");
+				reservation.set("location", e.detail.locationId);
+				reservation.set("start", that.setHour(date, h, 0));
+				reservation.set("end", that.setHour(date, h+1, 0));
+				
+				that.reservations.push(reservation);
 			    $sked.skedTape('addEvent', {
-			        name: 'User Name',
-			        location: e.detail.locationId,
-			        start: that.setHour(date, h, 0),
-			        end: that.setHour(date, h+1, 0)
+			        name: reservation.get("name"),
+			        location: reservation.get("location"),
+			        userData: {cid: reservation.cid},
+			        start: reservation.get("start"),
+			        end: reservation.get("end")
 			    });
 			});
 			
-//			var events = this.buildEvent();
-//			for (idx in events) {
-//				$sked.skedTape('addEvent', events[idx]);
-//			}
 		},
 
 		buildEvent: function() {
@@ -144,6 +215,33 @@ define([ 'jquery', 'underscore', 'backbone'
 			date.setHours(hours, minutes, 0, 0);
 			return date;
 		},
+
+		reserve: function() {
+			var reservationBatch = new ReservationBatch();
+			reservationBatch.set("events", this.reservations);
+			reservationBatch.save(reservationBatch.toJSON(), {
+                success: function (model, response) {
+                	bootbox.alert("Reservation done");
+                },
+                error: function (error, response) {
+                    console.log(error);
+                    bootbox.alert("Reservation failed");
+                }
+            })
+		},
+		
+		checkIn: function() {
+			this.reservation.save(this.reservation.toJSON(), {
+				type: 'PUT',
+                success: function (model) {
+                	bootbox.alert("Check in success");
+                },
+                error: function (model, response) {
+                    console.log(response);
+                    bootbox.alert("Check in  failed");
+                }
+			});
+		}
 	});
 
 	return ReservationView;

@@ -14,12 +14,12 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox', 'cspinner'
 		loginInfo : new LoginInfo(),
 		events: {
 			"submit" : "login",
-			"change #userName": "setUserName",
+			"change #email": "setEmail",
 			"change #password": "setPassword"
 		},
 
-		setUserName: function(e) {
-			this.loginInfo.set('userName', $(e.currentTarget).val());
+		setEmail: function(e) {
+			this.loginInfo.set('email', $(e.currentTarget).val());
 		},
 
 		setPassword: function(e) {

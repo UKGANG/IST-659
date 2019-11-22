@@ -20,6 +20,7 @@ require.config({
 	},
 	shim : {
 		'moment': {
+			deps : [ 'jquery' ],
             exports: 'moment'
         }, 'underscore' : {
 			exports : '_'
