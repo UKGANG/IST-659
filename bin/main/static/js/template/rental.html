@@ -7,13 +7,16 @@
 
         <!-- DataTables Example -->
         <div class="card mb-3">
-          <div class="card-header"><i class="fas fa-table"></i>Gear Rental Management</div>
+          <div class="card-header"><i class="fa-hand-holding"></i> Gear Rental Management</div>
           
 <div class="card-body row">
-    <div class="col-md-12 form-inline">
+    <div class="col-md-11 form-inline">
         <input class="form-control" id="reservationCode" type="text" placeholder="Enter reservation code ...">
 		&nbsp;&nbsp;&nbsp;
 		<a href="#" id="retrieve_reservation_btn" class="btn bg-orange"><i class="fas fa-search"></i> Retrieve available gears</a>
+    </div>
+    <div class="col-md-1 form-inline">
+    	<a href="#" id="rent_btn" class="btn bg-orange"><i class="fas fa-hand-point-down"></i> Rent</a>
     </div>
 </div>
           <div class="card-body">
@@ -21,33 +24,21 @@
               <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Position</th>
-                    <th>Office</th>
-                    <th>Age</th>
-                    <th>Start date</th>
-                    <th>Salary</th>
+                    <th></th>
+                    <th>Gear Name</th>
+                    <th>Brand</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tfoot>
                   <tr>
-                    <th>Name</th>
-                    <th>Position</th>
-                    <th>Office</th>
-                    <th>Age</th>
-                    <th>Start date</th>
-                    <th>Salary</th>
+                    <th></th>
+                    <th>Gear Name</th>
+                    <th>Brand</th>
+                    <th></th>
                   </tr>
                 </tfoot>
                 <tbody>
-                  <tr>
-                    <td>Tiger Nixon</td>
-                    <td>System Architect</td>
-                    <td>Edinburgh</td>
-                    <td>61</td>
-                    <td>2011/04/25</td>
-                    <td>$320,800</td>
-                  </tr>
                 </tbody>
               </table>
             </div>

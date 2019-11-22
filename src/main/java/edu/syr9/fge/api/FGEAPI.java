@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
@@ -18,8 +19,11 @@ import edu.syr9.fge.api.serializer.CourtDto;
 import edu.syr9.fge.api.serializer.DtoConverter;
 import edu.syr9.fge.api.serializer.EventDto;
 import edu.syr9.fge.api.serializer.EventDtoWrapper;
+import edu.syr9.fge.api.serializer.GearDto;
+import edu.syr9.fge.api.serializer.GearRental;
 import edu.syr9.fge.api.serializer.ReservationDto;
 import edu.syr9.fge.domain.CourtReservation;
+import edu.syr9.fge.domain.Gear;
 import edu.syr9.fge.domain.Timeslot;
 import edu.syr9.fge.domain.User;
 import edu.syr9.fge.exception.FGEException;
@@ -113,5 +117,35 @@ public class FGEAPI {
 		System.out.println(String.format("Check In succeed: %s", reservationDto.getReservationCode()));
 		return reservationDto;
 	}
-		
+
+	@GetMapping(path = "/reservation/gear", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GearDto retrieveGear(@RequestParam("reservationCode") String reservationCode) {
+		System.out.println(String.format("Retrieve succeed: %s", reservationCode));
+		List<Gear> gears = new ArrayList<>();
+		Gear gear1 = new Gear();
+		Gear gear2 = new Gear();
+		Gear gear3 = new Gear();
+		gear1.setBrand("Nike");
+		gear2.setBrand("Adidas");
+		gear3.setBrand("Abibas");
+		gear1.setGearId(1L);
+		gear2.setGearId(2L);
+		gear3.setGearId(3L);
+		gear1.setGearName("Badminton");
+		gear2.setGearName("Soccer");
+		gear3.setGearName("Cooking");
+		gears.add(gear1);
+		gears.add(gear2);
+		gears.add(gear3);
+		GearDto dto = new GearDto();
+		dto.setGears(gears);
+		return dto;
+	}
+
+	@PostMapping(path = "/reservation/gear", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public GearRental rentGear(@RequestBody GearRental gearRental) {
+		System.out.println(String.format("Renting for reservation succeed: %s", gearRental.getReservationCode()));
+		System.out.println(String.format("Gears: %s", gearRental.getGearIds().stream().map(String::valueOf).collect(Collectors.joining(","))));
+		return gearRental;
+	}
 }

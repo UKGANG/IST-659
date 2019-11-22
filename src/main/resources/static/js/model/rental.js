@@ -1,16 +1,8 @@
 define([ 'backbone'], function(Backbone) {
-    var Dashboard = Backbone.Model.extend({
-        //urlRoot: "/rest/monitor/trackings",
+    var Rental = Backbone.Model.extend({
+        url: "/fge/reservation/gear",
         idAttribute: "rid",
-        defaults : function() {
-            return {
-                userName : '',
-                password : ''
-
-            };
-        },
-
     });
 
-    return Dashboard;
+    return Rental;
 });
