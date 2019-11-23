@@ -1,6 +1,8 @@
 define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'bootbox'
+	, 'collection/gears'
 	, 'collection/gear_types', 'text!template/gear_type.html'
 		], function($, _, Backbone, bootstrap4, bootbox
+				, Gears
 				, GearTypes, GearTypeHTML) {
 	var GearTypeView = Backbone.View.extend({
 		el : null,
@@ -29,9 +31,18 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'bootbox'
 		},
 
 		switchDropdown: function(e) {
+			var that = this;
 			var selText = $(e.currentTarget).html();
 			$('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
-			this.parent.gearType = $(e.currentTarget).attr("data");
+			var gearTypeId = $(e.currentTarget).attr("data");
+			var gears = new Gears();
+			gears.fetch({
+				gearTypeId: gearTypeId,
+				success: function (model) {
+					that.parent.gears = model.models[0].attributes.gears;
+					that.parent.refreshGrid();
+                },
+			});
 		},
 
 	});

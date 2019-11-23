@@ -11,6 +11,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		gearType: null,
 		gearTypeView: null,
 		table: null,
+		gears: null,
 		events: {
             "click #refurbish_btn" : "refurbish",
          },
@@ -32,21 +33,25 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 //				  }, {
 //				    "mDataProp": "FirstName"
 //				  }]
-				
+				"columns": [
+					{ data: "gearId" },
+                    { data: "gearName" },
+                    { data: "brand" },
+                    { data: "" }
+				],
 				"columnDefs": [ {
 		            "orderable": false,
 		            "className": 'select-checkbox',
 		            "targets":   -1, 
 		            'render': function (data, type, full, meta){
 		            	console.log(data);
-			             return '<input type="checkbox" id="123">';
+		            	return '<input type="checkbox" name="gearId" value=' + full.gearId + '>';
 			         }
-		        } ],
-		        select: {
-		            style:    'os',
-		            selector: 'td:first-child'
-		        },
-		        order: [[ 1, 'asc' ]]
+				}, {
+		               "targets": 0,
+		               "visible": false,
+		               "searchable": false
+				} ],
 			});
 
 			this.gearTypeView = new GearTypeView($(".gearTypeDropdown"));
@@ -54,7 +59,8 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		},
 
 		refreshGrid: function() {
-			
+			$('#refurbishTable').dataTable().fnClearTable();
+        	$('#refurbishTable').dataTable().fnAddData(this.gears);
 		},
 
 		refurbish: function() {
