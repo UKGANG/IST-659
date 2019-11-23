@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.websocket.server.PathParam;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,9 +23,11 @@ import edu.syr9.fge.api.serializer.EventDto;
 import edu.syr9.fge.api.serializer.EventDtoWrapper;
 import edu.syr9.fge.api.serializer.GearDto;
 import edu.syr9.fge.api.serializer.GearRental;
+import edu.syr9.fge.api.serializer.GearTypeDto;
 import edu.syr9.fge.api.serializer.ReservationDto;
 import edu.syr9.fge.domain.CourtReservation;
 import edu.syr9.fge.domain.Gear;
+import edu.syr9.fge.domain.GearType;
 import edu.syr9.fge.domain.Timeslot;
 import edu.syr9.fge.domain.User;
 import edu.syr9.fge.exception.FGEException;
@@ -118,6 +122,7 @@ public class FGEAPI {
 		return reservationDto;
 	}
 
+	// Refactor to path
 	@GetMapping(path = "/reservation/gear", produces = MediaType.APPLICATION_JSON_VALUE)
 	public GearDto retrieveGear(@RequestParam("reservationCode") String reservationCode) {
 		System.out.println(String.format("Retrieve succeed: %s", reservationCode));
@@ -147,5 +152,44 @@ public class FGEAPI {
 		System.out.println(String.format("Renting for reservation succeed: %s", gearRental.getReservationCode()));
 		System.out.println(String.format("Gears: %s", gearRental.getGearIds().stream().map(String::valueOf).collect(Collectors.joining(","))));
 		return gearRental;
+	}
+
+	@GetMapping(path = "/gearType")
+	public GearTypeDto getGearTypes() {
+		GearTypeDto dto = new GearTypeDto();
+		GearType gearType1 = new GearType();
+		GearType gearType2 = new GearType();
+		gearType1.setGearTypeId(1L);
+		gearType2.setGearTypeId(2L);
+		gearType1.setGearTypeName("GearTypeName1");
+		gearType2.setGearTypeName("GearTypeName2");
+		dto.setGearTypes(new ArrayList<>());
+		dto.getGearTypes().add(gearType1);
+		dto.getGearTypes().add(gearType2);
+		return dto;
+	}
+
+	@GetMapping(path = "/gear/{gearId}")
+	public GearDto getGears(@PathParam("gearId") String id) {
+		System.out.println(String.format("Retrieve succeed: %s", id));
+		List<Gear> gears = new ArrayList<>();
+		Gear gear1 = new Gear();
+		Gear gear2 = new Gear();
+		Gear gear3 = new Gear();
+		gear1.setBrand("Nike");
+		gear2.setBrand("Adidas");
+		gear3.setBrand("Abibas");
+		gear1.setGearId(1L);
+		gear2.setGearId(2L);
+		gear3.setGearId(3L);
+		gear1.setGearName("Badminton");
+		gear2.setGearName("Soccer");
+		gear3.setGearName("Cooking");
+		gears.add(gear1);
+		gears.add(gear2);
+		gears.add(gear3);
+		GearDto dto = new GearDto();
+		dto.setGears(gears);
+		return dto;
 	}
 }

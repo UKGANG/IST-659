@@ -1,0 +1,8 @@
+  <div class="btn-group">
+    <a class="btn btn-primary dropdown-toggle bg-orange" data-toggle="dropdown" style="cursor:hand;">-- Select Gear Type -- <span class="caret"></span></a>
+    <ul class="dropdown-menu">
+    	<%_.each(labels, function(label, index) { %>
+      		<li class="dropdown-item" data="<%=label.gearTypeId%>"><%=label.gearTypeName%></li>
+        <% }); %>
+    </ul>
+  </div>

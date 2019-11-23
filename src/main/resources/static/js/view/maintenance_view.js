@@ -1,14 +1,18 @@
 define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTables', 'bootbox'
-        , 'model/maintenance', 'text!template/maintenance.html'
+    , 'view/gear_type_view'    
+	, 'model/maintenance', 'text!template/maintenance.html'
 		], function($, _, Backbone, bootstrap4, dataTable, bootbox
-		, Maintenance, MaintenanceHTML) {
+				, GearTypeView
+				, Maintenance, MaintenanceHTML) {
 	var MaintenanceView = Backbone.View.extend({
 		el : null,
 		template : _.template(MaintenanceHTML),
 		maintenance : new Maintenance(),
+		gearType: null,
+		gearTypeView: null,
 		table: null,
 		events: {
-            "click #refurbish_btn" : "refurbish"
+            "click #refurbish_btn" : "refurbish",
          },
 
 		initialize : function(root) {
@@ -44,6 +48,13 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		        },
 		        order: [[ 1, 'asc' ]]
 			});
+
+			this.gearTypeView = new GearTypeView($(".gearTypeDropdown"));
+			this.gearTypeView.parent = this;
+		},
+
+		refreshGrid: function() {
+			
 		},
 
 		refurbish: function() {
