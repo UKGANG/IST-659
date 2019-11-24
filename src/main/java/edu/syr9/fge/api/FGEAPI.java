@@ -6,11 +6,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.websocket.server.PathParam;
-
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,8 +21,8 @@ import edu.syr9.fge.api.serializer.DtoConverter;
 import edu.syr9.fge.api.serializer.EventDto;
 import edu.syr9.fge.api.serializer.EventDtoWrapper;
 import edu.syr9.fge.api.serializer.GearDto;
+import edu.syr9.fge.api.serializer.GearIdsDto;
 import edu.syr9.fge.api.serializer.GearRental;
-import edu.syr9.fge.api.serializer.GearTypeDto;
 import edu.syr9.fge.api.serializer.ReservationDto;
 import edu.syr9.fge.domain.CourtReservation;
 import edu.syr9.fge.domain.Gear;
@@ -155,22 +154,21 @@ public class FGEAPI {
 	}
 
 	@GetMapping(path = "/gearType")
-	public GearTypeDto getGearTypes() {
-		GearTypeDto dto = new GearTypeDto();
+	public List<GearType> getGearTypes() {
+		List<GearType> returns = new ArrayList<>();
 		GearType gearType1 = new GearType();
 		GearType gearType2 = new GearType();
 		gearType1.setGearTypeId(1L);
 		gearType2.setGearTypeId(2L);
 		gearType1.setGearTypeName("GearTypeName1");
 		gearType2.setGearTypeName("GearTypeName2");
-		dto.setGearTypes(new ArrayList<>());
-		dto.getGearTypes().add(gearType1);
-		dto.getGearTypes().add(gearType2);
-		return dto;
+		returns.add(gearType1);
+		returns.add(gearType2);
+		return returns;
 	}
 
 	@GetMapping(path = "/gear/{gearId}")
-	public GearDto getGears(@PathParam("gearId") String id) {
+	public List<Gear> getGears(@PathVariable("gearId") String id) {
 		System.out.println(String.format("Retrieve succeed: %s", id));
 		List<Gear> gears = new ArrayList<>();
 		Gear gear1 = new Gear();
@@ -185,11 +183,19 @@ public class FGEAPI {
 		gear1.setGearName("Badminton");
 		gear2.setGearName("Soccer");
 		gear3.setGearName("Cooking");
+		gear1.setUseFrequencyCount(1);
+		gear2.setUseFrequencyCount(2);
+		gear3.setUseFrequencyCount(3);
 		gears.add(gear1);
 		gears.add(gear2);
 		gears.add(gear3);
-		GearDto dto = new GearDto();
-		dto.setGears(gears);
+
+		return gears;
+	}
+
+	@PutMapping(path = "/gear")
+	public GearIdsDto renewGears(@RequestBody GearIdsDto dto) {
+		System.out.println(String.format("Refrubish: %d", dto.getGearIds().size()));
 		return dto;
 	}
 }

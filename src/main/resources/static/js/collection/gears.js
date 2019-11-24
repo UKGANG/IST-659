@@ -4,11 +4,17 @@ define(['backbone', 'model/gear'], function (Backbone, Gear) {
     	model : Gear,
         idAttribute: "rid",
         sync : mySyncFunction,
+        save: function (options) {
+            this.sync("update", this, options);
+        }
 
     });
 
     function mySyncFunction(method, model, options){
-		options.url = "/fge/gear/" + options.gearTypeId;
+    	if ("read" == method) {
+    		model.url = "/fge/gear/" + options.gearTypeId;
+    	}
+    	model.gearIds = options.gearIds;
 		return Backbone.sync(method, model, options);
 	};
     return Gears;

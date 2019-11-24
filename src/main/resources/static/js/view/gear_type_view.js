@@ -24,7 +24,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'bootbox'
 			var that = this;
 			this.gearTypes.fetch({
 				success: function (model) {
-					that.$el.html(that.template({labels: model.models[0].attributes.gearTypes}));
+					that.$el.html(that.template({labels: model.models}));
 					_.bindAll(that, "switchDropdown");
                 },
 			});
@@ -39,7 +39,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'bootbox'
 			gears.fetch({
 				gearTypeId: gearTypeId,
 				success: function (model) {
-					that.parent.gears = model.models[0].attributes.gears;
+					that.parent.gears = model.models.map(function(i) {return i.attributes;});
 					that.parent.refreshGrid();
                 },
 			});

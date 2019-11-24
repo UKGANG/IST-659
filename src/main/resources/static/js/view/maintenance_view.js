@@ -1,8 +1,10 @@
 define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTables', 'bootbox'
     , 'view/gear_type_view'    
+    , 'collection/gears'    
 	, 'model/maintenance', 'text!template/maintenance.html'
 		], function($, _, Backbone, bootstrap4, dataTable, bootbox
 				, GearTypeView
+				, Gears
 				, Maintenance, MaintenanceHTML) {
 	var MaintenanceView = Backbone.View.extend({
 		el : null,
@@ -37,6 +39,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 					{ data: "gearId" },
                     { data: "gearName" },
                     { data: "brand" },
+                    { data: "useFrequencyCount" },
                     { data: "" }
 				],
 				"columnDefs": [ {
@@ -64,14 +67,21 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		},
 
 		refurbish: function() {
-			var selected = $("input[type=checkbox]:checked");
-			var tmpData;
-			  $.each(selected, function(i, val) {
-			    tmpData = selected[i];
-			    alert(tmpData.id);
-			  }); 
+			var gearIds = $.makeArray($("input[type=checkbox]")).map(function(i) {return i.value;})
+			new Gears().save({
+				attrs: {
+					gearIds: gearIds
+				},
+				success: function (model) {
+                	bootbox.alert("Refurbish success");
+                	$('#refurbishTable').dataTable().fnClearTable();
+                },
+                error: function (model, response) {
+                    console.log(response);
+                    bootbox.alert("Refurbish failed");
+                }
+			})
 		}
-		
 	});
 
 	return MaintenanceView;
