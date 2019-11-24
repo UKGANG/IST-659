@@ -15,7 +15,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
             "click #rent_btn" : "rent",
             "change #reservationCode" : "setReservationCode",
         },
-        
+
         setReservationCode : function(e) {
         	this.rental.set("reservationCode", $(e.currentTarget).val());
         },

@@ -24,6 +24,7 @@ import edu.syr9.fge.api.serializer.GearDto;
 import edu.syr9.fge.api.serializer.GearIdsDto;
 import edu.syr9.fge.api.serializer.GearRental;
 import edu.syr9.fge.api.serializer.ReservationDto;
+import edu.syr9.fge.api.serializer.UserDto;
 import edu.syr9.fge.domain.CourtReservation;
 import edu.syr9.fge.domain.Gear;
 import edu.syr9.fge.domain.GearType;
@@ -198,4 +199,32 @@ public class FGEAPI {
 		System.out.println(String.format("Refrubish: %d", dto.getGearIds().size()));
 		return dto;
 	}
+
+	@GetMapping(path = "/user")
+	public List<UserDto> listUser(@RequestParam(required = false, value = "email") String email) {
+		UserDto user1 = new UserDto();
+		UserDto user2 = new UserDto();
+		user1.setUserId(1L);
+		user2.setUserId(2L);
+		user1.setFirstName("firstName1");
+		user2.setFirstName("firstName2");
+		user1.setMiddleName("middleName1");
+		user2.setMiddleName("middleName2");
+		user1.setLastName("lastName1");
+		user2.setLastName("lastName2");
+		user1.setEmail("email1");
+		user2.setEmail("email2");
+		user1.setPhoneNo("phoneNo1");
+		user2.setPhoneNo("phoneNo2");
+		user1.setGender("male");
+		user2.setGender("female");
+		user1.setDob(new Date());
+		user2.setDob(new Date());
+		List<UserDto> returns = new ArrayList<>();
+		returns.add(user1);
+		returns.add(user2);
+		return returns;
+	}
+
+
 }

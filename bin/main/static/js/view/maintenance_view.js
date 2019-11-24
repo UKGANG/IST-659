@@ -29,12 +29,6 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 			this.table = $('#refurbishTable').DataTable({
 				"paging": false,
 				"searching": false,
-//				"aaData": data,   //this is your JSON object, which is what is showing in your post above with console.log(data)
-//				  "aoColumns": [{
-//				    "mDataProp": "PatientID"
-//				  }, {
-//				    "mDataProp": "FirstName"
-//				  }]
 				"columns": [
 					{ data: "gearId" },
                     { data: "gearName" },

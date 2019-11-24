@@ -1,37 +1,64 @@
 define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTables', 'bootbox'
-        , 'view/profile_view', 'model/membership', 'text!template/membership.html'
+        , 'view/profile_view'
+        , 'model/user', 'collection/users'
+        , 'text!template/membership.html'
 		], function($, _, Backbone, bootstrap4, dataTable, bootbox
-				, ProfileView, Membership, MembershipHTML
+				, ProfileView
+				, User, Users
+				, MembershipHTML
 		) {
 	var MembershipView = Backbone.View.extend({
 		el : null,
 		template : _.template(MembershipHTML),
-		membership : new Membership(),
+		user : new User(),
+		users : new Users(),
 		events: {
             "click #search_btn" : "search",
             "click #add_btn" : "add",
             "click #modify_btn" : "modify",
          },
 
-		initialize : function(root) {
+         initialize : function(root) {
 			console.log('Membership status initialized');
 			this.$el = root;
 			
 		},
 
 		render: function() {
+			var that = this;
 			this.$el.html(this.template());
-			var table = $('#dataTable').DataTable({
+			this.renderTable();
+			this.search();
+		},
+
+		renderTable: function() {
+			var table = $('#userTable').dataTable({
 				"paging": false,
 				"searching": false,
-//				"aaData": data,   //this is your JSON object, which is what is showing in your post above with console.log(data)
-//				  "aoColumns": [{
-//				    "mDataProp": "PatientID"
-//				  }, {
-//				    "mDataProp": "FirstName"
-//				  }]
+				"columns": [
+					{ data: "userId" },
+                    { data: "firstName" },
+                    { data: "middleName" },
+                    { data: "lastName" },
+                    { data: "email" },
+                    { data: "phoneNo" },
+                    { data: "gender" },
+                    { data: "dob" }
+				],
+				"columnDefs": [ {
+		               "targets": 0,
+		               "visible": false,
+		               "searchable": false
+				} ],
 			});
-		    $('#dataTable tbody').on( 'click', 'tr', function () {
+
+		},
+
+		refreshGrid: function() {
+			var table = $('#userTable').dataTable();
+			table.fnClearTable();
+        	table.fnAddData(this.users.models.map(function(i) {return i.attributes;}));
+		    $('#userTable tbody').on( 'click', 'tr', function () {
 		        if ( $(this).hasClass('selected') ) {
 		            $(this).removeClass('selected');
 		        }
@@ -44,7 +71,22 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		},
 
 		search: function() {
-			bootbox.alert("Mock search");
+			var that = this;
+			var email = $("#email").val();
+			var param = null;
+			if ("" != email) {
+				param = {email : email};
+			}
+			this.users.fetch({
+				data: param,
+				success: function (model) {
+					that.refreshGrid();
+                },
+                error: function (model, response) {
+                    console.log(response);
+                    bootbox.alert("Search user failed");
+                }
+			});
 		},
 		add: function() {
 			$('#myModal').modal();
