@@ -1,9 +1,9 @@
 IF NOT EXISTS(SELECT TOP 1 1 FROM sys.tables WHERE name='access' AND SCHEMA_NAME(schema_id)='dbo')
 BEGIN
 
-	CREATE TABLE dbo.access
+	CREATE TABLE dbo.page_type
 	(
-		access_id           BIGINT          NOT NULL,
+		page_type_id           BIGINT          NOT NULL,
 		page_name           NVARCHAR(255)   NOT NULL,
 		is_enabled          BIT             NOT NULL
 	)

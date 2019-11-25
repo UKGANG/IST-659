@@ -4,7 +4,7 @@ BEGIN
 	CREATE TABLE dbo.role
 	(
 		role_id             BIGINT          NOT NULL,
-		access_id           BIGINT          NOT NULL,
+		page_type_id           BIGINT          NOT NULL,
 		user_id             BIGINT          NOT NULL,
 		is_enabled          BIT             NOT NULL,
 		role_name           NVARCHAR(255)   NOT NULL
