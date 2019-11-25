@@ -1,8 +1,9 @@
 define([ 'backbone'], function(Backbone) {
-    var Dashboard = Backbone.Model.extend({
+    var Profile = Backbone.Model.extend({
         url: "/fge/user",
-        idAttribute: "rid",
+        idAttribute: "userId",
         sync : mySyncFunction,
+        save : null,
         defaults : function() {
             return {
             	userId : '',
@@ -31,5 +32,5 @@ define([ 'backbone'], function(Backbone) {
     	return Backbone.sync(method, model, options);
 	};
 
-	return Dashboard;
+	return Profile;
 });

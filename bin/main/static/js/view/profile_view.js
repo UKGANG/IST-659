@@ -40,12 +40,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'bootbox'
 		render: function() {
 			this.$el.modal();
 			this.$el.html(this.template(this.profile.toJSON()));
-			$("#dob").datepicker({
-//			    onSelect: function(dateText) {
-//			    	
-//			    	that.buildSlot(new Date(Date.parse(dateText)));
-//			    }
-			});
+			$("#dob").datepicker();
 		},
 
 		save: function() {
@@ -54,7 +49,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'bootbox'
 				success: function (model) {
 					that.profile = new Profile();
 					$('#myModal').modal('hide');
-					bootbox.alert("Mock save");
+					bootbox.alert("Save or update done! ");
 					$("#emailCriteria").val("");
 					that.parent.search();
                 },

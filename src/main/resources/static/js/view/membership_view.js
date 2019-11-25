@@ -13,6 +13,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		user : new User(),
 		users : new Users(),
 		profileView : new ProfileView(),
+		table : null,
 		events: {
             "click #search_btn" : "search",
             "click #add_btn" : "add",
@@ -34,10 +35,11 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		},
 
 		renderTable: function() {
-			var table = $('#userTable').dataTable({
-				"paging": false,
-				"searching": false,
-				"columns": [
+			this.table = $('#userTable').DataTable({
+				paging: false,
+				searching: false,
+				select: true,
+				columns: [
 					{ data: "userId" },
                     { data: "firstName" },
                     { data: "middleName" },
@@ -47,7 +49,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
                     { data: "gender" },
                     { data: "dob" }
 				],
-				"columnDefs": [ {
+				columnDefs: [ {
 		               "targets": 0,
 		               "visible": false,
 		               "searchable": false
@@ -57,18 +59,26 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		},
 
 		refreshGrid: function() {
-			var table = $('#userTable').dataTable();
-			table.fnClearTable();
-        	table.fnAddData(this.users.models.map(function(i) {return i.attributes;}));
+			var that = this;
+			this.table.clear()
+				.rows
+				.add(this.users.models.map(function(i) {return i.attributes;}))
+				.draw();
+        	
+			$('#userTable tbody').off('click');
 		    $('#userTable tbody').on( 'click', 'tr', function () {
 		        if ( $(this).hasClass('selected') ) {
 		            $(this).removeClass('selected');
 		        }
 		        else {
-		            table.$('tr.selected').removeClass('selected');
+		            that.table.$('tr.selected').removeClass('selected');
 		            $(this).addClass('selected');
 		        }
-		        var rowData = table.rows( { selected: true } ).data()[0];
+		        var rowData = that.table.rows( { selected: true } ).data()[0];
+		        var user = that.users.filter(function(e) {
+		        	return e.get("userId") == rowData.userId;
+		        })[0];
+		        that.profileView.profile = user;
 		    } );
 		},
 
@@ -94,8 +104,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 			this.profileView.render();
 		},
 		modify: function() {
-			$('#myModal').modal();
-			new ProfileView($('#myModal'));
+			this.profileView.render();
 		},
 	});
 

@@ -11,6 +11,7 @@ public class User {
 	private String email;
 	private String phoneNo;
 	private String gender;
+	private String ssn;
 	private Date dob;
 	private String password;
 
@@ -68,6 +69,14 @@ public class User {
 
 	public void setGender(String gender) {
 		this.gender = gender;
+	}
+
+	public String getSsn() {
+		return ssn;
+	}
+
+	public void setSsn(String ssn) {
+		this.ssn = ssn;
 	}
 
 	public Date getDob() {

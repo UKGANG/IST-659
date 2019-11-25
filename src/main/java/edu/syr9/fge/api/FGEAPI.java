@@ -218,6 +218,8 @@ public class FGEAPI {
 		user2.setPhoneNo("phoneNo2");
 		user1.setGender("male");
 		user2.setGender("female");
+		user1.setSsn("abc");
+		user2.setSsn("def");
 		user1.setDob(new Date());
 		user2.setDob(new Date());
 		List<UserDto> returns = new ArrayList<>();
