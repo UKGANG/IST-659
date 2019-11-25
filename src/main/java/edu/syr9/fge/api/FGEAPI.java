@@ -23,6 +23,7 @@ import edu.syr9.fge.api.serializer.EventDtoWrapper;
 import edu.syr9.fge.api.serializer.GearDto;
 import edu.syr9.fge.api.serializer.GearIdsDto;
 import edu.syr9.fge.api.serializer.GearRental;
+import edu.syr9.fge.api.serializer.PageTypeDto;
 import edu.syr9.fge.api.serializer.ReservationDto;
 import edu.syr9.fge.api.serializer.UserDto;
 import edu.syr9.fge.domain.CourtReservation;
@@ -239,5 +240,19 @@ public class FGEAPI {
 		System.out.println(String.format("Update user done: %s", dto.getEmail()));
 		return dto;
 	}
-		
+
+	@GetMapping(path = "/pageTypes")
+	public List<PageTypeDto> listPageType() {
+		PageTypeDto dto1 = new PageTypeDto();
+		PageTypeDto dto2 = new PageTypeDto();
+		dto1.setPageTypeId(1L);
+		dto2.setPageTypeId(2L);
+		dto1.setPageName("Page1");
+		dto2.setPageName("Page2");
+		List<PageTypeDto> returns = new ArrayList<>();
+		returns.add(dto1);
+		returns.add(dto2);
+
+		return returns;
+	}
 }

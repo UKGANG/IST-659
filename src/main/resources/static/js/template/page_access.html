@@ -1,3 +1,7 @@
+<head>
+	<link href="js/lib/EasyAutocomplete-1.3.5/easy-autocomplete.min.css" rel="stylesheet">
+	<link href="js/lib/EasyAutocomplete-1.3.5/easy-autocomplete.themes.min.css" rel="stylesheet">
+</head>
 <style>
 	table.dataTable tbody>tr.selected>td, 
 	table.dataTable tbody>tr>.selected>td {
@@ -7,17 +11,22 @@
 
         <!-- DataTables Example -->
         <div class="card mb-3">
-          <div class="card-header"><i class="fas fa-pager"></i> Page Management</div>
-          
+
 <div class="card-body row">
     <div class="col-md-12 form-inline">
-		&nbsp;&nbsp;&nbsp;
-        <a href="#" id="grant_btn" class="btn bg-orange"><i class="fa fa-plus"></i> Grant</a>
-    </div>
+    	<div id="pageType"></div>
+    	&nbsp;&nbsp;&nbsp;
+		<label for="basics">Search User by Email:</label>
+    	&nbsp;&nbsp;&nbsp;
+    	<input class="form-control" id="searchDropdown" />
+    	&nbsp;&nbsp;&nbsp;
+        <a class="form-control bg-orange" href="#" id="add_btn" class="btn bg-orange"><i class="fas fa-user-plus"></i> Add</a>
+	</div>
 </div>
+
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <table class="table table-bordered" id="roleTable" width="100%" cellspacing="0">
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -38,39 +47,10 @@
                     <th>Salary</th>
                   </tr>
                 </tfoot>
-                <tbody>
-                  <tr>
-                    <td>Tiger Nixon</td>
-                    <td>System Architect</td>
-                    <td>Edinburgh</td>
-                    <td>61</td>
-                    <td>2011/04/25</td>
-                    <td>$320,800</td>
-                  </tr>
-                </tbody>
               </table>
             </div>
           </div>
-          <div class="card-footer small text-muted">Syracuse University</div>
+
         </div>
 
         
-<div id="myModal" class="modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Grant Access</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>Modal body text goes here.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary bg-orange">Save</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>

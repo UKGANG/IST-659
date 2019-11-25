@@ -13,7 +13,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'bootbox'
             "click .dropdown-menu li" : "switchDropdown"
          },
 
-		initialize : function(root, that) {
+		initialize : function(root) {
 			console.log('Gear type dropdown initialized');
 			this.$el = root;
 			this.render();

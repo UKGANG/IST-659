@@ -38,7 +38,6 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 			this.table = $('#userTable').DataTable({
 				paging: false,
 				searching: false,
-				select: true,
 				columns: [
 					{ data: "userId" },
                     { data: "firstName" },
