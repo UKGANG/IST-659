@@ -226,5 +226,16 @@ public class FGEAPI {
 		return returns;
 	}
 
+	@PostMapping(path = "/user")
+	public UserDto createUser(@RequestBody UserDto dto) {
+		System.out.println(String.format("Create user done: %s", dto.getEmail()));
+		return dto;
+	}
 
+	@PutMapping(path = "/user")
+	public UserDto updateUser(@RequestBody UserDto dto) {
+		System.out.println(String.format("Update user done: %s", dto.getEmail()));
+		return dto;
+	}
+		
 }

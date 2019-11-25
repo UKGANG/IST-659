@@ -8,10 +8,17 @@ import edu.syr9.fge.domain.User;
 
 public class UserDto extends User {
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
 	@Override
 	public Date getDob() {
 		return super.getDob();
 	}
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
+	@Override
+	public void setDob(Date dob) {
+		super.setDob(dob);
+	}
+
+	
 }

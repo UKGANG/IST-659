@@ -1,56 +1,83 @@
-<div class="card mb-1">
-	<div class="card-body">
-		<form id="basic-form">
-			<div class="row">
-				<div class="col-md-4">
-					<label for="email">Email:</label>
-					<input id="email" class="form-control" type="text" value="{{=email}}" >
-				</div>
-				<div class="col-md-4">
-					<label for="password">Password:</label>
-					<input id="password" class="form-control" type="text" value="password" >
-				</div>
-				<div class="col-md-4">
-					<label for="repeat">Repeat:</label>
-					<input id="repeat" class="form-control" type="text" value="{{=repeat}}" >
-				</div>
+<head>
+	<link href="css/jquery-ui.css" rel="stylesheet">
+</head>
+
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Profile</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+		<div class="card mb-1">
+			<div class="card-body">
+				<form id="basic-form">
+					<input id="userId" class="form-control" type="hidden" value="<%=userId%>" >
+					<div class="row">
+						<div class="col-md-4">
+							<label class="form-control-sm" for="email">Email:</label>
+							<input id="email" class="form-control" type="text" value="<%=email%>" >
+						</div>
+						<div class="col-md-4">
+							<label class="form-control-sm" for="password">Password:</label>
+							<input id="password" class="form-control" type="password" value="<%=password%>" >
+						</div>
+						<div class="col-md-4">
+							<label class="form-control-sm" for="repeat">Repeat:</label>
+							<input id="repeat" class="form-control" type="password" value="<%=repeat%>" >
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<label class="form-control-sm" for="firstName">First Name:</label>
+							<input id="firstName" class="form-control" type="text" value="<%=firstName%>" >
+						</div>
+						<div class="col-md-4">
+							<label class="form-control-sm" for="middleName">Middle Name:</label>
+							<input id="middleName" class="form-control" type="text" value="<%=middleName%>" >
+						</div>
+						<div class="col-md-4">
+							<label class="form-control-sm" for="lastName">Last Name:</label>
+							<input id="lastName" class="form-control" type="text" value="<%=lastName%>" >
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<label class="form-control-sm" for="gender">Gender:</label>
+							<input id="gender" class="form-control" type="text" value="<%=gender%>" >
+						</div>
+						<div class="col-md-4">
+							<label class="form-control-sm" for="phoneNo">Phone No:</label>
+							<input id="phoneNo" class="form-control" type="text" value="<%=phoneNo%>" >
+						</div>
+						<div class="col-md-4">
+							<label class="form-control-sm" for="ssn">SSN:</label>
+							<input id="ssn" class="form-control" type="text" value="<%=ssn%>" >
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<label class="form-control-sm" for="dob">DOB:</label>
+							<div class="input-group">
+								<input id="dob" class="form-control-sm" type="text" aria-label="<%=dob%>"
+									style="cursor: pointer" placeholder="MM/DD/YYYY" value="<%=dob%>" readonly>
+								<div id="date_append" class="input-group-append" style="cursor: pointer">
+									<span class="input-group-text"><i class="fas fa-fw fa-calendar-alt" ></i></span>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-8"></div>
+					</div>
+				</form>
 			</div>
-			<div class="row">
-				<div class="col-md-4">
-					<label for="firstName">First Name:</label>
-					<input id="firstName" class="form-control" type="text" value="{{=firstName}}" >
-				</div>
-				<div class="col-md-4">
-					<label for="middleName">Middle Name:</label>
-					<input id="middleName" class="form-control" type="text" value="{{=middleName}}" >
-				</div>
-				<div class="col-md-4">
-					<label for="lastName">Last Name:</label>
-					<input id="lastName" class="form-control" type="text" value="{{=lastName}}" >
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-4">
-					<label for="gender">Gender:</label>
-					<input id="gender" class="form-control" type="text" value="{{=gender}}" >
-				</div>
-				<div class="col-md-4">
-					<label for="phoneNo">Phone No:</label>
-					<input id="phoneNo" class="form-control" type="text" value="{{=phoneNo}}" >
-				</div>
-				<div class="col-md-4">
-					<label for="ssn">SSN:</label>
-					<input id="ssn" class="form-control" type="text" value="{{=ssn}}" >
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-4">
-					<label for="dob">DOB:</label>
-					<input id="dob" class="form-control" type="text" value="{{=dob}}" >
-				</div>
-				<div class="col-md-8"></div>
-			</div>
-		</form>
-	</div>
-</div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary bg-orange">Save</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
 

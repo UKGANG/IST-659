@@ -12,6 +12,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		template : _.template(MembershipHTML),
 		user : new User(),
 		users : new Users(),
+		profileView : new ProfileView(),
 		events: {
             "click #search_btn" : "search",
             "click #add_btn" : "add",
@@ -21,7 +22,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
          initialize : function(root) {
 			console.log('Membership status initialized');
 			this.$el = root;
-			
+			this.profileView.parent = this;
 		},
 
 		render: function() {
@@ -29,6 +30,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 			this.$el.html(this.template());
 			this.renderTable();
 			this.search();
+			this.profileView.setElement($('#myModal'));
 		},
 
 		renderTable: function() {
@@ -72,7 +74,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 
 		search: function() {
 			var that = this;
-			var email = $("#email").val();
+			var email = $("#emailCriteria").val();
 			var param = null;
 			if ("" != email) {
 				param = {email : email};
@@ -89,12 +91,11 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 			});
 		},
 		add: function() {
-			$('#myModal').modal();
-			new ProfileView($('.modal-body'));
+			this.profileView.render();
 		},
 		modify: function() {
 			$('#myModal').modal();
-			new ProfileView($('.modal-body'));
+			new ProfileView($('#myModal'));
 		},
 	});
 
