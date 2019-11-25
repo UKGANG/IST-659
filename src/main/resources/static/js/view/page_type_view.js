@@ -1,8 +1,10 @@
 define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'bootbox'
 	, 'jquery.dataTables', 'jquery.autocomplete'
+	, 'model/role', 'collection/roles'
 	, 'model/page_type', 'collection/page_types', 'text!template/page_type.html'
 		], function($, _, Backbone, bootstrap4, bootbox
 				, dataTable, autocomplete
+				, Role, Roles
 				, PageType, PageTypes, PageTypeHTML) {
 	var PageTypeView = Backbone.View.extend({
 		el : null,
@@ -23,24 +25,34 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'bootbox'
 				success: function (model) {
 					that.$el.html(that.template({labels: model.models}));
 					_.bindAll(that, "switchDropdown");
+					that.switchDropdown();
                 },
 			});
 		},
 
 		switchDropdown: function(e) {
 			var that = this;
-			var selText = $(e.currentTarget).html();
-			$('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
-			var pageTypeId = $(e.currentTarget).attr("data");
+			var pageTypeId = "";
+			if (e) {
+				var selText = $(e.currentTarget).html();
+				$('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
+				pageTypeId = $(e.currentTarget).attr("data");
+			}
 			// roles
-//			var gears = new Gears();
-//			gears.fetch({
-//				gearTypeId: gearTypeId,
-//				success: function (model) {
-//					that.parent.gears = model.models.map(function(i) {return i.attributes;});
-//					that.parent.refreshGrid();
-//                },
-//			});
+			var roles = new Roles();
+			roles.fetch({
+				data: {pageTypeId: pageTypeId},
+				success: function (model) {
+					that.parent.roles = model.models.map(function(e) {
+						return {
+							roleId: e.get("roleId"),
+							email: e.get("user").email,
+							pageName: e.get("pageType").pageName,
+						};
+					});
+					that.parent.refreshGrid();
+                },
+			});
 		},
 
 //		refreshGrid: function() {

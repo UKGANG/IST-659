@@ -25,6 +25,7 @@ import edu.syr9.fge.api.serializer.GearIdsDto;
 import edu.syr9.fge.api.serializer.GearRental;
 import edu.syr9.fge.api.serializer.PageTypeDto;
 import edu.syr9.fge.api.serializer.ReservationDto;
+import edu.syr9.fge.api.serializer.RoleDto;
 import edu.syr9.fge.api.serializer.UserDto;
 import edu.syr9.fge.domain.CourtReservation;
 import edu.syr9.fge.domain.Gear;
@@ -253,6 +254,35 @@ public class FGEAPI {
 		returns.add(dto1);
 		returns.add(dto2);
 
+		return returns;
+	}
+
+	@GetMapping(path = "/role")
+	public List<RoleDto> getRoles(@RequestParam(required = false, value = "pageTypeId") Long pageTypeId) {
+		System.out.println(String.format("Page Type Id received: %d", pageTypeId));
+		RoleDto role1 = new RoleDto();
+		RoleDto role2 = new RoleDto();
+		role1.setRoleId(1L);
+		role2.setRoleId(1L);
+		PageTypeDto pageType1 = new PageTypeDto();
+		PageTypeDto pageType2 = new PageTypeDto();
+		pageType1.setPageTypeId(1L);
+		pageType2.setPageTypeId(2L);
+		pageType1.setPageName("Page1");
+		pageType2.setPageName("Page2");
+		role1.setPageType(pageType1);
+		role2.setPageType(pageType2);
+		UserDto user1 = new UserDto();
+		UserDto user2 = new UserDto();
+		user1.setUserId(1L);
+		user2.setUserId(2L);
+		user1.setEmail("email1");
+		user2.setEmail("email2");
+		role1.setUser(user1);
+		role2.setUser(user2);
+		List<RoleDto> returns = new ArrayList<>();
+		returns.add(role1);
+		returns.add(role2);
 		return returns;
 	}
 }
