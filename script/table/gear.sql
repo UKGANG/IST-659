@@ -1,4 +1,4 @@
-ΩIF NOT EXISTS(SELECT TOP 1 1 FROM sys.tables WHERE name='gear' AND SCHEMA_NAME(schema_id)='dbo')
+IF NOT EXISTS(SELECT TOP 1 1 FROM sys.tables WHERE name='gear' AND SCHEMA_NAME(schema_id)='dbo')
 BEGIN
 
 	CREATE TABLE dbo.gear

@@ -5,9 +5,8 @@ BEGIN
 	(
 		role_id             BIGINT          NOT NULL,
 		page_type_id           BIGINT          NOT NULL,
-		user_id             BIGINT          NOT NULL,
+		participant_id             BIGINT          NOT NULL,
 		is_enabled          BIT             NOT NULL,
-		role_name           NVARCHAR(255)   NOT NULL
 	)
 
 	PRINT 'CREATE TABLE dbo.role'

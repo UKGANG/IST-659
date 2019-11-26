@@ -3,7 +3,7 @@ BEGIN
 
 	CREATE TABLE dbo.rental_history
 	(
-		rental_history_id	BINGINT         NOT NULL,
+		rental_history_id	BIGINT         NOT NULL,
 		organizer_id        BIGINT          NOT NULL,
 		gear_id             BIGINT          NOT NULL,
 		borrow_datetime     DATETIME        NOT NULL,

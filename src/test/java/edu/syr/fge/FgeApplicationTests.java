@@ -1,4 +1,4 @@
-package edu.syr9.fge;
+package edu.syr.fge;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

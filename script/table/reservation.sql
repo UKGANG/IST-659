@@ -6,7 +6,7 @@ BEGIN
 		reservation_id      BIGINT          NOT NULL,
 		organizer_id        BIGINT          NOT NULL,
 		court_id            BIGINT          NOT NULL,
-		activity_type_id    BIGINT          NOT NULL,
+		activity_type_id    SMALLINT          NOT NULL,
 		reservation_token   NVARCHAR(6)     NOT NULL,
 		participant_count   SMALLINT,
 	)

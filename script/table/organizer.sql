@@ -4,7 +4,7 @@ BEGIN
 	CREATE TABLE dbo.organizer
 	(
 		organizer_id        BIGINT          NOT NULL,
-		user_id             BIGINT          NOT NULL,
+		participant_id             BIGINT          NOT NULL,
 		created_datetime    DATETIME        NOT NULL
 	)
 

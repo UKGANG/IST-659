@@ -3,7 +3,7 @@ BEGIN
 
 	CREATE TABLE dbo.relevant_gear
 	(
-		activity_type_id	BIGINT          NOT NULL,
+		activity_type_id	SMALLINT          NOT NULL,
 		gear_id             BIGINT          NOT NULL,
 		quantity            INT             NOT NULL,
 		is_required         BIT             NOT NULL

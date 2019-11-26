@@ -4,7 +4,7 @@ BEGIN
 	CREATE TABLE dbo.credential
 	(
 		credential_id       BIGINT          NOT NULL,
-		user_id             BIGINT          NOT NULL,
+		participant_id             BIGINT          NOT NULL,
 		password            NVARCHAR(255)   NOT NULL,
 		activated_datetime  DATETIME        NOT NULL
 	)

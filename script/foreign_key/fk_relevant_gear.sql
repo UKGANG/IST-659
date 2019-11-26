@@ -8,7 +8,7 @@ IF NOT EXISTS (SELECT TOP 1 1
 BEGIN
 
 	ALTER TABLE dbo.[relevant_gear]  WITH CHECK ADD CONSTRAINT [fk_relevant_gear_activity_type_id] FOREIGN KEY([activity_type_id])
-	REFERENCES dbo.gear ([activity_type_id])
+	REFERENCES dbo.activity_type ([activity_type_id])
 
 	ALTER TABLE dbo.[relevant_gear] CHECK CONSTRAINT [fk_relevant_gear_activity_type_id]
 
