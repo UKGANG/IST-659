@@ -3,8 +3,10 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="edu.syr.fge.repositroy.mapper.ISchoolMapper">
+<mapper namespace="edu.syr.fge.repository.mapper.ISchoolMapper">
 	<select id="testLink" resultType="java.lang.String">
-		SELECT 'Ken'  
+		SELECT TOP 1 airPlaneID 
+		FROM [IST659_M002_jjian03].[dbo].[FlightSchedule_t] 
+		WHERE flightNumber IN (1111, 1112);
 	</select>
 </mapper>

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,6 +35,7 @@ import edu.syr.fge.domain.GearType;
 import edu.syr.fge.domain.Timeslot;
 import edu.syr.fge.domain.User;
 import edu.syr.fge.exception.FGEException;
+import edu.syr.fge.repository.mapper.ISchoolMapper;
 
 @RestController
 public class FGEAPI {
@@ -298,5 +300,13 @@ public class FGEAPI {
 		System.out.println(String.format("Create role: user id - %d, page type id - %d"
 				, dto.getUser().getUserId(), dto.getPageType().getPageTypeId()));
 		return dto;
+	}
+
+	@Autowired
+	private ISchoolMapper mapper;
+
+	@GetMapping(path = "/test")
+	public String getTestLink() {
+		return mapper.testLink();
 	}
 }

@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan({"edu.syr.fge.dao", "edu.syr.fge.service", "edu.syr.fge.api"})
+@ComponentScan({"edu.syr.fge.repository.mapper", "edu.syr.fge.service", "edu.syr.fge.api"})
 public class FgeApplication {
 
 	public static void main(String[] args) {
