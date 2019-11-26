@@ -1,8 +1,8 @@
 define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTables', 'bootbox'
-		, 'collection/roles'
+		, 'model/role', 'collection/roles'
         , 'view/page_type_view', 'model/page_access', 'text!template/page_access.html'
 		], function($, _, Backbone, bootstrap4, dataTable, bootbox
-				, Roles
+				, Role, Roles
 				, PageTypeView, PageAccess, PageAccessHTML
 		) {
 	var PageAccessView = Backbone.View.extend({
@@ -10,10 +10,11 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		template : _.template(PageAccessHTML),
 		userGroup : new PageAccess(),
 		pageTypeView : new PageTypeView(),
+		role: new Role(),
 		roles: null,
 		table : null,
 		events: {
-            "click #grant_btn" : "grant",
+            "click #grant_access_btn" : "grantAccess",
          },
 
 		initialize : function(root) {
@@ -24,8 +25,37 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		},
 
 		render: function() {
+			var that = this;
 			this.$el.html(this.template());
-			var options = this.tmpSearchDropdown();
+//			var options = this.tmpSearchDropdown();
+			var options = {
+					url: function(phrase) {
+						return "user";
+					},
+				    list: {
+				    	onClickEvent: function(e) {
+				            var userId = $("#searchDropdown").getSelectedItemData().userId;
+				            that.role.get("user").set("userId", userId); 
+				        },
+				    },
+					getValue: function(element) {
+						return element.firstName + ", " 
+							+ element.middleName + ", "
+							+ element.lastName + " | "
+							+ element.email;
+					},
+					ajaxSettings: {
+					    dataType: "json",
+					    method: "GET",
+					},
+					preparePostData: function(data) {
+					    return {
+					    	email: $("#searchDropdown").val()
+					    };
+					},
+					requestDelay: 400
+					
+			};
 
 			$("#searchDropdown").easyAutocomplete(options);
 			this.renderTable();
@@ -83,35 +113,21 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		        })[0];
 
 		        role.destroy();
-//		        bootbox.alert( data[0] +"'s salary is: "+ data[ 5 ] );
 		    });
 
-//			$('#roleTable tbody').off('click');
-//		    $('#roleTable tbody').on( 'click', 'tr', function () {
-//		        if ( $(this).hasClass('selected') ) {
-//		            $(this).removeClass('selected');
-//		        }
-//		        else {
-//		            that.table.$('tr.selected').removeClass('selected');
-//		            $(this).addClass('selected');
-//		        }
-//		        var rowData = that.table.rows( { selected: true } ).data()[0];
-//		        var user = that.users.filter(function(e) {
-//		        	return e.get("userId") == rowData.userId;
-//		        })[0];
-//		        that.profileView.profile = user;
-//		    } );
 		},
 
-		tmpSearchDropdown : function() {
-			return {
-				data: ["blue", "green", "pink", "red", "yellow"], 
-				list: {
-					onClickEvent: function(e) {
-						alert("Click !");
-					}	
-				}
-			};
+		grantAccess : function() {
+			var that = this;
+			this.role.save("roleId", null);
+			this.role.save(null, {
+				success: function (model) {
+					bootbox.alert("Add success! ");
+					that.role.clone(that.role.defaults());
+                }, error: function (model, response) {
+					bootbox.alert("Add failed! ");
+                },
+			});
 		},
 	});
 

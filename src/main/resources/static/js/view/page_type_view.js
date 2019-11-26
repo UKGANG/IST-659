@@ -38,6 +38,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'bootbox'
 				$('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
 				pageTypeId = $(e.currentTarget).attr("data");
 			}
+			this.parent.role.get("pageType").set("pageTypeId", pageTypeId);
 			// roles
 			var roles = new Roles();
 			roles.fetch({
