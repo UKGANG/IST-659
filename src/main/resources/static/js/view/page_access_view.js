@@ -65,7 +65,13 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 			var that = this;
 			this.table.clear()
 				.rows
-				.add(this.roles)
+				.add(this.roles.models.map(function(e) {
+					return {
+						roleId: e.get("roleId"),
+						email: e.get("user").email,
+						pageName: e.get("pageType").pageName,
+					};
+				}))
 				.draw();
         	
 			$('#roleTable tbody').off('click');
@@ -73,10 +79,10 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		        var rowData = that.table.row($(this).parents('tr')).data();
 		        
 		        var role = that.roles.filter(function(e) {
-		        	return e.roleId == rowData.roleId;
+		        	return e.get("roleId") == rowData.roleId;
 		        })[0];
 
-		        role.delete();
+		        role.destroy();
 //		        bootbox.alert( data[0] +"'s salary is: "+ data[ 5 ] );
 		    });
 

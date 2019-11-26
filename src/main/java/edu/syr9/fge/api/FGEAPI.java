@@ -6,8 +6,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.websocket.server.PathParam;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -285,4 +288,11 @@ public class FGEAPI {
 		returns.add(role2);
 		return returns;
 	}
+
+	@DeleteMapping(path = "/role/{pageTypeId}")
+	public Long deleteRole(@PathVariable("pageTypeId") Long pageTypeId) {
+		System.out.println(String.format("Received pageTypeId: %d", pageTypeId));
+		return pageTypeId;
+	}
+
 }

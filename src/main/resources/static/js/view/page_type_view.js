@@ -43,13 +43,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'bootbox'
 			roles.fetch({
 				data: {pageTypeId: pageTypeId},
 				success: function (model) {
-					that.parent.roles = model.models.map(function(e) {
-						return {
-							roleId: e.get("roleId"),
-							email: e.get("user").email,
-							pageName: e.get("pageType").pageName,
-						};
-					});
+					that.parent.roles = model;
 					that.parent.refreshGrid();
                 },
 			});
