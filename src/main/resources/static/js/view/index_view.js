@@ -37,7 +37,6 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox', 'cspinner'
 			var that = this;
 			this.loginInfo.fetch({
                 data: this.loginInfo.toJSON(),
-                type: 'GET',
                 success: (function (model) {
                     that.success(that.loginInfo.get("userId"));
                 }),

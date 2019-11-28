@@ -35,11 +35,30 @@
 		FROM IST659_M002_jjian03.dbo.court;
 	</select>
 
-	<select id="getActivityTypes" resultType="edu.syr.fge.domain.ActivityType">
+	<resultMap type="edu.syr.fge.domain.AvailableActivity" id="AvailableActivity">
+        <association property="court"
+                     javaType="edu.syr.fge.domain.Court" columnPrefix="c_" >
+            <id property="courtId" column="id" />
+        </association>
+        <association property="activityType"
+                     javaType="edu.syr.fge.domain.ActivityType" columnPrefix="a_" >
+            <id property="activityTypeId" column="id" />
+            <id property="activityName" column="name" />
+        </association>
+    </resultMap>
+
+	<select id="getAvailableActivities" resultMap="AvailableActivity">
 		SELECT 
-			activity_type_id AS activityTypeId 
-			, activity_name AS activityName 
-		FROM IST659_M002_jjian03.dbo.activity_type;
+			c.court_id AS c_id
+			, a.activity_type_id AS a_id 
+			, a.activity_name AS a_name 
+		FROM IST659_M002_jjian03.dbo.activity_type a
+		JOIN IST659_M002_jjian03.dbo.available_activity aa ON a.activity_type_id = aa.activity_type_id 
+		JOIN IST659_M002_jjian03.dbo.court c ON aa.court_id = c.court_id 
+		WHERE c.court_id IN 
+		<foreach item="courtId" index="index" collection="courtIds" open="(" separator="," close=")">
+			#{courtId}
+		</foreach>;
 	</select>
 <!-- 
 	<resultMap type="edu.syr.fge.domain.CourtReservation" id="CourtReservation">

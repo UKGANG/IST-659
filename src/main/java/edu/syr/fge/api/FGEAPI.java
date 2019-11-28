@@ -1,11 +1,17 @@
 package edu.syr.fge.api;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -33,6 +39,7 @@ import edu.syr.fge.api.serializer.ReservationDto;
 import edu.syr.fge.api.serializer.RoleDto;
 import edu.syr.fge.api.serializer.UserDto;
 import edu.syr.fge.domain.ActivityType;
+import edu.syr.fge.domain.AvailableActivity;
 import edu.syr.fge.domain.Court;
 import edu.syr.fge.domain.CourtReservation;
 import edu.syr.fge.domain.Gear;
@@ -63,8 +70,40 @@ public class FGEAPI {
 	}
 
 	@GetMapping(path = "/activityTypes")
-	public List<ActivityType> getActivityTypes() {
-		return mapper.getActivityTypes();
+	public List<ActivityType> getActivityTypes(@RequestParam(required = false, value = "courtIds") String courtIdStr) {
+		List<String> courtIds = Arrays.asList(courtIdStr.split(","));
+		List<AvailableActivity> availableActivities = mapper.getAvailableActivities(courtIds);
+		if (1 == courtIds.size()) {
+			return availableActivities.stream()
+					.map(AvailableActivity::getActivityType)
+					.collect(Collectors.toList());
+		}
+		Map<Long, Set<Long>> availableMap = new HashMap<>();
+		availableActivities.forEach(e -> {
+			Long courtId = e.getCourt().getCourtId();
+			Long aaId = e.getActivityType().getActivityTypeId();
+			availableMap.putIfAbsent(courtId, new HashSet<>());
+			availableMap.get(courtId).add(aaId);
+		});
+		Collection<Set<Long>> activityIds = availableMap.values();
+		Iterator<Set<Long>> iter = activityIds.iterator();
+		Set<Long> first = iter.next();
+		while (iter.hasNext()) {
+			Set<Long> next = iter.next();
+			first.retainAll(next);
+			if (first.isEmpty()) {
+				break;
+			}
+		}
+		
+		Map<Long, ActivityType> entireActivityTypes = availableActivities.stream()
+			.map(AvailableActivity::getActivityType)
+			.collect(Collectors.toMap(ActivityType::getActivityTypeId, Function.identity(), (a,b) -> a));
+		return entireActivityTypes.entrySet()
+			.stream()
+			.filter(e -> first.contains(e.getKey()))
+			.map(Map.Entry::getValue)
+			.collect(Collectors.toList());
 	}
 
 	@GetMapping(path = "/court/reservation")

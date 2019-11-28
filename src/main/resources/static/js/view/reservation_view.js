@@ -17,11 +17,13 @@ define([ 'jquery', 'underscore', 'backbone'
 		template : _.template(ReservationHTML),
 		reservationDate: new Date(),
 		reservations : new Reservations(),
+		activityType: null,
 		activityTypeView : new ActivityTypeView(),
 		courts : new Courts(),
+		courtIdCount: new Map(),
 		reservation : new Reservation(),
 		events: {
-			"click #reserve_btn" : "reserve",
+			"click #reserve_btn" : "preReserve",
 			"click #check_in_btn" : "checkIn",
             "click #date_append" : "showCalendar",
             "change #reservationCode": "setReservationCode",
@@ -62,8 +64,8 @@ define([ 'jquery', 'underscore', 'backbone'
 				that.retrieveDailyReservation(buildSlotFunc);
 			}
 			this.retrieveCourts(retrieveDailyReservationFunc);
-			this.activityTypeView.setElement($("#activityType"));
-			this.activityTypeView.render();
+			this.activityTypeView.setElement($("#activityTypeModal>.modal-dialog>.modal-content"));
+			this.activityTypeView.parent = this;
 		},
 
 		retrieveCourts : function(successFunc) {
@@ -148,6 +150,9 @@ define([ 'jquery', 'underscore', 'backbone'
 
 
 			$sked.on('event:click.skedtape', function(e/*, api*/) {
+				var cnt = that.courtIdCount.get(e.detail.locationId);
+				cnt = cnt ? cnt - 1 : 0;
+				that.courtIdCount.set(e.detail.locationId, cnt);
 				that.reservations.remove(e.detail.event.userData.cid);
 			    $sked.skedTape('removeEvent', e.detail.event.id);
 			});
@@ -164,6 +169,9 @@ define([ 'jquery', 'underscore', 'backbone'
 				reservation.set("end", that.setHour(date, h+1, 0));
 				
 				that.reservations.push(reservation);
+				var cnt = that.courtIdCount.get(e.detail.locationId);
+				cnt = cnt ? cnt + 1 : 1;
+				that.courtIdCount.set(e.detail.locationId, cnt);
 			    $sked.skedTape('addEvent', {
 			        name: reservation.get("name"),
 			        location: reservation.get("location"),
@@ -186,8 +194,13 @@ define([ 'jquery', 'underscore', 'backbone'
 			return date;
 		},
 
+		preReserve: function() {
+			this.activityTypeView.render();
+		},
+
 		reserve: function() {
 			var reservationBatch = new ReservationBatch();
+			reservationBatch.set("activityType", this.activityType);
 			reservationBatch.set("date", this.reservationDate);
 			reservationBatch.set("events", this.reservations);
 			reservationBatch.save(reservationBatch.toJSON(), {

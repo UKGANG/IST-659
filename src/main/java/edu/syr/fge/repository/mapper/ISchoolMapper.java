@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import edu.syr.fge.api.serializer.CourtDto;
-import edu.syr.fge.domain.ActivityType;
+import edu.syr.fge.domain.AvailableActivity;
 import edu.syr.fge.domain.CourtReservation;
 import edu.syr.fge.domain.Participant;
 import edu.syr.fge.domain.Timeslot;
@@ -18,7 +18,7 @@ public interface ISchoolMapper {
 	String testLink();
 	Participant getUser(@Param("email") String email, @Param("password") String password);
 	List<CourtDto> getCourts();
-	List<ActivityType> getActivityTypes();
+	List<AvailableActivity> getAvailableActivities(@Param("courtIds") List<String> courtIds);
 	List<Timeslot> getTimeslots(@Param("reservationDate") Date reservationDate);
 	List<CourtReservation> saveCourtReservations(@Param("reservationDate") Date reservationDate);
 //    List<TestPlan> listAvailableTestPlans(@Param("requestedDate") Date requestDate, @Param("currentDate") Date currentDate);
