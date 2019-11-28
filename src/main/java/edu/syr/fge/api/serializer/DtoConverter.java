@@ -3,27 +3,49 @@ package edu.syr.fge.api.serializer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import edu.syr.fge.domain.ActivityType;
+import edu.syr.fge.domain.Court;
 import edu.syr.fge.domain.CourtReservation;
+import edu.syr.fge.domain.Participant;
 import edu.syr.fge.domain.Timeslot;
 
 public class DtoConverter {
 
-	public static List<EventDto> convertCourtReservation(List<CourtReservation> source) {
-		List<EventDto> destination = new ArrayList<>();
-		for (CourtReservation cr : source) {
-			Long courtId = cr.getCourtId();
-			List<Timeslot> slots = cr.getTimeslots();
-			for (Timeslot ts : slots) {
-				EventDto dto = new EventDto();
-				dto.setLocation(courtId);
-				dto.setStart(ts.getStartDatetime());
-				dto.setEnd(ts.getEndDatetime());
-				dto.setName(UUID.randomUUID().toString());
-				destination.add(dto);
-			}
-		}
-
-		return destination;
+	public static List<EventDto> convertToEventDtos(List<Timeslot> source) {
+		return source.stream().map(ts -> {
+			EventDto dto = new EventDto();
+			dto.setLocation(ts.getCourt().getCourtId());
+			dto.setParticipantId(ts.getParticipant().getParticipantId());
+			dto.setActivityTypeId(ts.getActivityType().getActivityTypeId());
+			dto.setName(ts.getActivityType().getActivityName());
+			dto.setStart(ts.getStartDatetime());
+			dto.setEnd(ts.getEndDatetime());
+			return dto;
+		}).collect(Collectors.toList());
 	}
+
+	public static List<Timeslot> convertToTimeslots(List<EventDto> eventDtos) {
+		return eventDtos.stream().map(dto -> {
+			Timeslot ts = new Timeslot();
+			ts.setTimeslotId(dto.getTimeslotId());
+			Participant participant = new Participant();
+			participant.setParticipantId(dto.getParticipantId());
+			ts.setParticipant(participant);
+			ActivityType activityType = new ActivityType();
+			activityType.setActivityTypeId(dto.getActivityTypeId());
+			activityType.setActivityName(dto.getName());
+			ts.setActivityType(activityType);
+			Court court = new Court();
+			court.setCourtId(dto.getLocation());
+			ts.setCourt(court);
+			ts.setStartDatetime(dto.getStart());
+			ts.setEndDatetime(dto.getEnd());
+
+			return ts;
+		}).collect(Collectors.toList());
+	}
+
 }

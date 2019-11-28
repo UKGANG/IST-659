@@ -10,7 +10,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'bootbox'
 		profile : new Profile(),
 		parent : null,
 		events: {
-            "click .btn-primary" : "save",
+            "click #profile_save" : "save",
             "click #date_append" : "showCalendar",
             "change #email" : "setValue",
             "change #password" : "setValue",

@@ -3,18 +3,21 @@ define([ 'jquery', 'underscore', 'backbone'
 	, 'jquery.ui', 'jquery.skedTape'
 	, 'collection/courts', 'model/reservation_batch'
 	, 'model/reservation', 'collection/reservations'
+	, 'view/activity_type_view'
 	, 'text!template/reservation.html'
 		], function($, _, Backbone
 				, bootstrap4, bootbox, moment
 				, jqueryUI, jquerySkedTape
 				, Courts, ReservationBatch
 				, Reservation, Reservations
+				, ActivityTypeView
 				, ReservationHTML) {
 	var ReservationView = Backbone.View.extend({
 		el : null,
 		template : _.template(ReservationHTML),
 		reservationDate: new Date(),
 		reservations : new Reservations(),
+		activityTypeView : new ActivityTypeView(),
 		courts : new Courts(),
 		reservation : new Reservation(),
 		events: {
@@ -59,7 +62,8 @@ define([ 'jquery', 'underscore', 'backbone'
 				that.retrieveDailyReservation(buildSlotFunc);
 			}
 			this.retrieveCourts(retrieveDailyReservationFunc);
-			
+			this.activityTypeView.setElement($("#activityType"));
+			this.activityTypeView.render();
 		},
 
 		retrieveCourts : function(successFunc) {
@@ -105,10 +109,20 @@ define([ 'jquery', 'underscore', 'backbone'
 
 		buildSlot: function(date) {
 			var that = this;
-			var events = that.reservations.toJSON();
+			var events = that.reservations;
+			if (events.length) {
+				events = events.map(function(i) {
+					i.set("data", {
+						timeslotId : i.get("timeslotId"),
+						participantId : i.get("participantId")
+					})
+					return i;
+				});
+			}
+			events = events.toJSON();
 			events.forEach(function (e) {
 				e.userData = {cid: e.cid};
-			})
+			});
 			var $sked = $('#container').skedTape({
 			    caption: 'Courts',
 			    start: that.setHour(date, 9, 0),
@@ -117,7 +131,6 @@ define([ 'jquery', 'underscore', 'backbone'
 			    showEventDuration: true, // Whether to show event duration
 			    zoom: 0.5,
 			    locations: that.courts.toJSON(),
-			    //events: that.buildEvent(),
 			    events: events,
 			    formatters: {
 			        date: function (date) {
@@ -142,8 +155,10 @@ define([ 'jquery', 'underscore', 'backbone'
 			$sked.on('timeline:click.skedtape', function(e/*, api*/) {
 				var h = e.detail.date.getHours();
 				var reservation = new Reservation();
-				//reservation.set("cid")
-				reservation.set("name", "Random name");
+//				reservation.set("timeslotId", );
+//				reservation.set("participantId", e.detail.participantId);
+//				reservation.set("activityType", e.detail.activityTypeId);
+				reservation.set("name", e.detail);
 				reservation.set("location", e.detail.locationId);
 				reservation.set("start", that.setHour(date, h, 0));
 				reservation.set("end", that.setHour(date, h+1, 0));
@@ -154,60 +169,15 @@ define([ 'jquery', 'underscore', 'backbone'
 			        location: reservation.get("location"),
 			        userData: {cid: reservation.cid},
 			        start: reservation.get("start"),
-			        end: reservation.get("end")
+			        end: reservation.get("end"),
+			        data: {
+			        	timeslotId: reservation.get("timeslotId"),
+			        	participantId: reservation.get("reservationId"),
+			        	activityTypeId: reservation.get("activityTypeId")
+			        }
 			    });
 			});
 			
-		},
-
-		buildEvent: function() {
-			var that = this;
-			var date = $("#date").datepicker("getDate");
-			var events = [
-			    {
-			        name: 'Meeting 1',
-			        location: 'london',
-			        start: that.setHour(date, 4, 15),
-			        end: that.setHour(date, 7, 30),
-			        url: null,
-			        class: '', // extra class
-			        disabled: false, // is disabled?
-			        data: {}, // data to set with $.data() method
-			        userData: {} // custom data
-			    },
-			    {
-			        name: 'Meeting 2',
-			        location: 'london',
-			        start: that.setHour(date, 7, 30),
-			        end: that.setHour(date, 9, 15)
-			    },
-			    {
-			        name: 'Meeting',
-			        location: '1',
-			        start: that.setHour(date, 10, 0),
-			        end: that.setHour(date, 11, 30)
-			    },
-			    // more events here
-			];
-			return events;
-		},
-
-		buildLocation: function() {
-			var locations = [
-			    {id: 1, name: 'San Francisco'},
-			    {
-			            id: 2,
-			            name: 'Sydney',
-			            order: 1, // optional sorting order
-			            tzOffset: -10 * 60, // individual timezone (notice that minus sign)
-			            //userData: {...} // optional some custom data to store
-			        },
-			    {id: 3, name: 'New York'},
-			    {id: 'london', name: 'London'},
-			    {id: 5, name: 'Copenhagen'},
-			    {id: 6, name: 'Berlin'}
-			];
-			return locations;
 		},
 
 		setHour: function(date, hours, minutes) {
@@ -218,6 +188,7 @@ define([ 'jquery', 'underscore', 'backbone'
 
 		reserve: function() {
 			var reservationBatch = new ReservationBatch();
+			reservationBatch.set("date", this.reservationDate);
 			reservationBatch.set("events", this.reservations);
 			reservationBatch.save(reservationBatch.toJSON(), {
                 success: function (model, response) {

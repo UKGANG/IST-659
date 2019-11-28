@@ -43,7 +43,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox', 'cspinner'
                 }),
                 error: (function (error) {
                     console.log(error);
-                    bootbox.alert("Login failed");
+                    alert("Login failed");
                 })
             });
 		}, 

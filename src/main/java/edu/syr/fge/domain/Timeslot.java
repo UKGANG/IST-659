@@ -4,6 +4,9 @@ import java.util.Date;
 
 public class Timeslot {
 	private Long timeslotId;
+	private Court court;
+	private Participant participant;
+	private ActivityType activityType;
 	private Long reservationId;
 	private Date startDatetime;
 	private Date endDatetime;
@@ -14,6 +17,30 @@ public class Timeslot {
 
 	public void setTimeslotId(Long timeslotId) {
 		this.timeslotId = timeslotId;
+	}
+
+	public Court getCourt() {
+		return court;
+	}
+
+	public void setCourt(Court court) {
+		this.court = court;
+	}
+
+	public Participant getParticipant() {
+		return participant;
+	}
+
+	public void setParticipant(Participant participant) {
+		this.participant = participant;
+	}
+
+	public ActivityType getActivityType() {
+		return activityType;
+	}
+
+	public void setActivityType(ActivityType activityType) {
+		this.activityType = activityType;
 	}
 
 	public Long getReservationId() {

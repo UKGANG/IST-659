@@ -9,4 +9,88 @@
 		FROM [IST659_M002_jjian03].[dbo].[FlightSchedule_t] 
 		WHERE flightNumber IN (1111, 1112);
 	</select>
+
+	<select id="getUser" resultType="edu.syr.fge.domain.Participant">
+		SELECT p.participant_id AS participantId 
+			, p.email AS email 
+			, p.phone_no AS phoneNo 
+			, p.first_name AS firstName 
+			, p.middle_name AS middleName 
+			, p.last_name AS lastName 
+			, p.gender AS gender 
+			, p.dob AS dob 
+			, p.age AS age 
+			, p.ssn AS ssn 
+			, p.created_datetime as createdDate 
+			, p.no_show_count as noShowCount 
+		FROM IST659_M002_jjian03.dbo.participant p
+		JOIN IST659_M002_jjian03.dbo.credential c ON p.participant_id = c.participant_id
+		WHERE p.email = #{email}
+		AND c.password = #{password};
+	</select>
+
+	<select id="getCourts" resultType="edu.syr.fge.api.serializer.CourtDto">
+		SELECT court_id AS courtId 
+			, court_name AS courtName 
+		FROM IST659_M002_jjian03.dbo.court;
+	</select>
+
+	<select id="getActivityTypes" resultType="edu.syr.fge.domain.ActivityType">
+		SELECT 
+			activity_type_id AS activityTypeId 
+			, activity_name AS activityName 
+		FROM IST659_M002_jjian03.dbo.activity_type;
+	</select>
+<!-- 
+	<resultMap type="edu.syr.fge.domain.CourtReservation" id="CourtReservation">
+        <id property="reservationId" column="reservation_id" />
+        <association property="participant"
+                     javaType="edu.syr.fge.domain.Participant" columnPrefix="p_" >
+            <id property="participantId" column="id" />
+            
+        </association>
+    </resultMap> -->
+
+	<resultMap type="edu.syr.fge.domain.Timeslot" id="Timeslot">
+        <id property="timeslotId" column="timeslot_id" />
+        <id property="reservationId" column="reservation_id" />
+        <id property="startDatetime" column="start_datetime" />
+        <id property="endDatetime" column="end_datetime" />
+        <association property="court"
+                     javaType="edu.syr.fge.domain.Court" columnPrefix="c_" >
+            <id property="courtId" column="id" />
+        </association>
+        <association property="participant"
+                     javaType="edu.syr.fge.domain.Participant" columnPrefix="p_" >
+            <id property="participantId" column="id" />
+            
+        </association>
+        <association property="activityType"
+                     javaType="edu.syr.fge.domain.ActivityType" columnPrefix="a_" >
+            <id property="activityTypeId" column="id" />
+            <id property="activityName" column="name" />
+            
+        </association>
+    </resultMap>
+
+    <select id="getTimeslots" resultMap="Timeslot">
+		SELECT t.timeslot_id
+			, t.start_datetime
+			, t.end_datetime
+			, t.start_datetime
+			, t.end_datetime
+			, r.reservation_id
+			, r.court_id AS c_id
+			, p.participant_id AS p_id
+			, p.first_name AS p_first_name 
+			, p.middle_name AS p_middle_name 
+			, p.last_name AS p_last_name 
+			, a.activity_type_id AS a_id
+			, a.activity_name AS a_name
+		FROM IST659_M002_jjian03.dbo.timeslot t 
+		JOIN IST659_M002_jjian03.dbo.reservation r ON t.reservation_id = r.reservation_id 
+		JOIN IST659_M002_jjian03.dbo.participant p ON r.organizer_id = p.participant_id 
+		JOIN IST659_M002_jjian03.dbo.activity_type a ON r.activity_type_id = a.activity_type_id 
+    	WHERE CAST(r.reservation_date AS DATE) = #{reservationDate};
+    </select>
 </mapper>

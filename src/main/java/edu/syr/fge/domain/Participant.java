@@ -2,9 +2,9 @@ package edu.syr.fge.domain;
 
 import java.util.Date;
 
-public class User {
+public class Participant {
 
-	private Long userId;
+	private Long participantId;
 	private String firstName;
 	private String middleName;
 	private String lastName;
@@ -15,12 +15,12 @@ public class User {
 	private Date dob;
 	private String password;
 
-	public Long getUserId() {
-		return userId;
+	public Long getParticipantId() {
+		return participantId;
 	}
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public void setParticipantId(Long participantId) {
+		this.participantId = participantId;
 	}
 
 	public String getFirstName() {

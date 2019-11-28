@@ -86,6 +86,11 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox'
 			this.pageAccessView = new PageAccessView(this.container);
 			this.profileView = new ProfileView();
 			this.profileView.setElement(this.container);
+			this.reservationView.profile = this.profile;
+			this.rentalView.profile = this.profile;
+			this.maintenanceView.profile = this.profile;
+			this.membershipView.profile = this.profile;
+			this.pageAccessView.profile = this.profile;
 	        this.profileView.profile = this.profile;
 			this.reservationView.render();
 			_.bindAll(this, "redirect");

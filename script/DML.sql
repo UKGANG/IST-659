@@ -138,9 +138,9 @@ INSERT INTO IST659_M002_jjian03.dbo.page_type (page_type_id, page_name, is_enabl
 INSERT INTO IST659_M002_jjian03.dbo.page_type (page_type_id, page_name, is_enabled) VALUES (7, 'Profile', 1);
 
 
-INSERT INTO IST659_M002_jjian03.dbo.participant (participant_id, email, phone_no, first_name, middle_name, last_name, gender, dob, age, ssn, created_datetime, no_show_count) VALUES (1, 'jjian03@syr.com', '3158029717', 'Jian', NULL, 'Jian', 'Male', '08/26/2019', 0, NULL, getdate(), 0);
-INSERT INTO IST659_M002_jjian03.dbo.participant (participant_id, email, phone_no, first_name, middle_name, last_name, gender, dob, age, ssn, created_datetime, no_show_count) VALUES (2, 'jjian03_1@syr.com', '3158029717', 'Jian', 'Staff', 'Jian', 'Male', '08/26/2019', 0, NULL, getdate(), 0);
-INSERT INTO IST659_M002_jjian03.dbo.participant (participant_id, email, phone_no, first_name, middle_name, last_name, gender, dob, age, ssn, created_datetime, no_show_count) VALUES (3, 'jjian03_2@syr.com', '3158029717', 'Jian', 'Admin', 'Jian', 'Female', '08/26/2019', 0, NULL, getdate(), 0);
+INSERT INTO IST659_M002_jjian03.dbo.participant (participant_id, email, phone_no, first_name, middle_name, last_name, gender, dob, age, ssn, created_datetime, no_show_count) VALUES (1, 'jjian03@syr.edu', '3158029717', 'Jian', NULL, 'Jian', 'Male', '08/26/2019', 0, NULL, getdate(), 0);
+INSERT INTO IST659_M002_jjian03.dbo.participant (participant_id, email, phone_no, first_name, middle_name, last_name, gender, dob, age, ssn, created_datetime, no_show_count) VALUES (2, 'jjian03_1@syr.edu', '3158029717', 'Jian', 'Staff', 'Jian', 'Male', '08/26/2019', 0, NULL, getdate(), 0);
+INSERT INTO IST659_M002_jjian03.dbo.participant (participant_id, email, phone_no, first_name, middle_name, last_name, gender, dob, age, ssn, created_datetime, no_show_count) VALUES (3, 'jjian03_2@syr.edu', '3158029717', 'Jian', 'Admin', 'Jian', 'Female', '08/26/2019', 0, NULL, getdate(), 0);
 
 INSERT INTO IST659_M002_jjian03.dbo.credential (credential_id, participant_id, password, activated_datetime) VALUES (1, 1, '123', getdate());
 INSERT INTO IST659_M002_jjian03.dbo.credential (credential_id, participant_id, password, activated_datetime) VALUES (2, 2, '234', getdate());

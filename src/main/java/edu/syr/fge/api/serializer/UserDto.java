@@ -4,9 +4,9 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import edu.syr.fge.domain.User;
+import edu.syr.fge.domain.Participant;
 
-public class UserDto extends User {
+public class UserDto extends Participant {
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
 	@Override

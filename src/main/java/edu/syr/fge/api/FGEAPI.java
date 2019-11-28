@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,45 +32,49 @@ import edu.syr.fge.api.serializer.PageTypeDto;
 import edu.syr.fge.api.serializer.ReservationDto;
 import edu.syr.fge.api.serializer.RoleDto;
 import edu.syr.fge.api.serializer.UserDto;
+import edu.syr.fge.domain.ActivityType;
+import edu.syr.fge.domain.Court;
 import edu.syr.fge.domain.CourtReservation;
 import edu.syr.fge.domain.Gear;
 import edu.syr.fge.domain.GearType;
+import edu.syr.fge.domain.Participant;
 import edu.syr.fge.domain.Timeslot;
-import edu.syr.fge.domain.User;
 import edu.syr.fge.exception.FGEException;
 import edu.syr.fge.repository.mapper.ISchoolMapper;
 
 @RestController
 public class FGEAPI {
 
+	@Autowired
+	private ISchoolMapper mapper;
+
 	@GetMapping(path = "/login")
-	public User getUser(@RequestParam("email") String email, @RequestParam("password") String password) {
-		if ("1".equals(email)) {
+	public Participant getUser(@RequestParam("email") String email, @RequestParam("password") String password) {
+		Participant user = mapper.getUser(email, password);
+		if (Objects.isNull(user)) {
 			throw new FGEException("User not found");
 		}
-		User access = new User();
-		access.setUserId(1L);
-		access.setEmail(email);
-		access.setPassword(password);
-		return access;
+		return user;
 	}
 
 	@GetMapping(path = "/court")
 	public List<CourtDto> getCourts() {
-		List<CourtDto> result = new ArrayList<>();
-		CourtDto court1 = new CourtDto();
-		CourtDto court2 = new CourtDto();
-		court1.setCourtId(1L);
-		court1.setCourtName("Court1");
-		court2.setCourtId(2L);
-		court2.setCourtName("Court2");
-		result.add(court1);
-		result.add(court2);
-		return result;
+		return mapper.getCourts();
+	}
+
+	@GetMapping(path = "/activityTypes")
+	public List<ActivityType> getActivityTypes() {
+		return mapper.getActivityTypes();
 	}
 
 	@GetMapping(path = "/court/reservation")
 	public List<EventDto> getCourtReservations(@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
+		List<Timeslot> timeslots = mapper.getTimeslots(date);
+		
+		return DtoConverter.convertToEventDtos(timeslots);
+	}
+
+	private List<CourtReservation> mockResult1() {
 		List<CourtReservation> courtReservations = new ArrayList<>();
 		CourtReservation courtReservation1 = new CourtReservation();
 		CourtReservation courtReservation2 = new CourtReservation();
@@ -85,6 +92,10 @@ public class FGEAPI {
 		timeslotA2.setTimeslotId(2L);
 		timeslotB1.setTimeslotId(3L);
 		timeslotB2.setTimeslotId(4L);
+//		timeslotA1.setParticipantId(1L);
+//		timeslotA2.setParticipantId(1L);
+//		timeslotB1.setParticipantId(1L);
+//		timeslotB2.setParticipantId(1L);
 		timeslotA1.setReservationId(1L);
 		timeslotA2.setReservationId(2L);
 		timeslotB1.setReservationId(3L);
@@ -106,19 +117,38 @@ public class FGEAPI {
 		timeslotB1.setEndDatetime(calendar.getTime());
 		calendar.set(Calendar.HOUR_OF_DAY, 18);
 		timeslotB2.setEndDatetime(calendar.getTime());
-		courtReservation1.setCourtId(1L);
-		courtReservation1.setTimeslots(timeslots1);
-		courtReservation2.setCourtId(2L);
-		courtReservation2.setTimeslots(timeslots2);
+		Court c1 = new Court();
+		Court c2 = new Court();
+		c1.setCourtId(1L);
+		c2.setCourtId(1L);
+//		courtReservation1.setCourt(c1);
+//		courtReservation1.setTimeslots(timeslots1);
+//		courtReservation2.setCourt(c2);
+//		courtReservation2.setTimeslots(timeslots2);
 		courtReservations.add(courtReservation1);
 		courtReservations.add(courtReservation2);
-		
-		List<EventDto> result = DtoConverter.convertCourtReservation(courtReservations);
-		return result;
+		return courtReservations;
 	}
-
 	@PostMapping(path = "/court/reservation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public EventDtoWrapper saveCourtReservations(@RequestBody EventDtoWrapper events) {
+		Date reservationDate = events.getDate();
+		Map<Long, Timeslot> oldTimeslots = mapper.getTimeslots(reservationDate)
+				.stream().collect(Collectors.toMap(Timeslot::getTimeslotId, Function.identity()));
+		List<EventDto> eventDtos = events.getEvents();
+		Map<Long, Timeslot> newTimeslots = DtoConverter.convertToTimeslots(eventDtos)
+				.stream().collect(Collectors.toMap(Timeslot::getTimeslotId, Function.identity()));
+		
+		List<Timeslot> remove = oldTimeslots.entrySet().stream()
+				.filter(e -> Objects.isNull(newTimeslots.get(e.getKey())))
+				.map(Map.Entry::getValue)
+				.collect(Collectors.toList());
+		List<Timeslot> add = newTimeslots.entrySet().stream()
+				.filter(e -> Objects.isNull(oldTimeslots.get(e.getKey())))
+				.map(Map.Entry::getValue)
+				.collect(Collectors.toList());
+
+//		mapper.add();
+//		mapper.remove();
 		return events;
 	}
 
@@ -209,7 +239,7 @@ public class FGEAPI {
 	@GetMapping(path = "/user/{userId}")
 	public UserDto getUser(@PathVariable("userId") Long userId) {
 		UserDto user = new UserDto();
-		user.setUserId(1L);
+		user.setParticipantId(1L);
 		user.setFirstName("firstName1");
 		user.setMiddleName("middleName1");
 		user.setLastName("lastName1");
@@ -225,8 +255,8 @@ public class FGEAPI {
 	public List<UserDto> listUser(@RequestParam(required = false, value = "email") String email) {
 		UserDto user1 = new UserDto();
 		UserDto user2 = new UserDto();
-		user1.setUserId(1L);
-		user2.setUserId(2L);
+		user1.setParticipantId(1L);
+		user2.setParticipantId(2L);
 		user1.setFirstName("firstName1");
 		user2.setFirstName("firstName2");
 		user1.setMiddleName("middleName1");
@@ -293,8 +323,8 @@ public class FGEAPI {
 		role2.setPageType(pageType2);
 		UserDto user1 = new UserDto();
 		UserDto user2 = new UserDto();
-		user1.setUserId(1L);
-		user2.setUserId(2L);
+		user1.setParticipantId(1L);
+		user2.setParticipantId(2L);
 		user1.setEmail("email1");
 		user2.setEmail("email2");
 		role1.setUser(user1);
@@ -314,12 +344,9 @@ public class FGEAPI {
 	@PostMapping(path = "/role")
 	public RoleDto createRole(@RequestBody RoleDto dto) {
 		System.out.println(String.format("Create role: user id - %d, page type id - %d"
-				, dto.getUser().getUserId(), dto.getPageType().getPageTypeId()));
+				, dto.getUser().getParticipantId(), dto.getPageType().getPageTypeId()));
 		return dto;
 	}
-
-	@Autowired
-	private ISchoolMapper mapper;
 
 	@GetMapping(path = "/test")
 	public String getTestLink() {

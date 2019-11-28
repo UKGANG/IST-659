@@ -4,7 +4,7 @@ public class Role {
 
 	private Long roleId;
 	private PageType pageType;
-	private User user;
+	private Participant user;
 
 	public Long getRoleId() {
 		return roleId;
@@ -22,11 +22,11 @@ public class Role {
 		this.pageType = pageType;
 	}
 
-	public User getUser() {
+	public Participant getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(Participant user) {
 		this.user = user;
 	}
 

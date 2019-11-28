@@ -1,15 +1,15 @@
 define([ 'backbone'], function(Backbone) {
-    var PageType = Backbone.Model.extend({
+    var ActivityType = Backbone.Model.extend({
         idAttribute: "rid",
         defaults : function() {
             return {
-                pageTypeId : '',
-                pageName : ''
+            	activityTypeId : '',
+                activityName : ''
 
             };
         },
 
     });
 
-    return PageType;
+    return ActivityType;
 });
