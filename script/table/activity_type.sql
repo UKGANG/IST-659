@@ -3,7 +3,7 @@ BEGIN
 
 	CREATE TABLE dbo.activity_type
 	(
-		activity_type_id    SMALLINT        NOT NULL,
+		activity_type_id    SMALLINT        NOT NULL IDENTITY,
 		activity_name       NVARCHAR(255)   NOT NULL,
 		maximum_participant SMALLINT        NOT NULL
 	)

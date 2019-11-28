@@ -3,7 +3,7 @@ BEGIN
 
 	CREATE TABLE dbo.gear_type
 	(
-		gear_type_id        BIGINT          NOT NULL,
+		gear_type_id        BIGINT          NOT NULL IDENTITY,
 		gear_name           NVARCHAR(255)   NOT NULL
 	)
 

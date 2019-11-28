@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -48,6 +49,8 @@ import edu.syr.fge.domain.Participant;
 import edu.syr.fge.domain.Timeslot;
 import edu.syr.fge.exception.FGEException;
 import edu.syr.fge.repository.mapper.ISchoolMapper;
+import edu.syr.fge.repository.vo.OrganizerVo;
+import edu.syr.fge.repository.vo.ReservationVo;
 
 @RestController
 public class FGEAPI {
@@ -172,11 +175,32 @@ public class FGEAPI {
 	@PostMapping(path = "/court/reservation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public EventDtoWrapper saveCourtReservations(@RequestBody EventDtoWrapper events) {
 		Date reservationDate = events.getDate();
-		Map<Long, Timeslot> oldTimeslots = mapper.getTimeslots(reservationDate)
-				.stream().collect(Collectors.toMap(Timeslot::getTimeslotId, Function.identity()));
+		List<Timeslot> existingSlots = mapper.getTimeslots(reservationDate);
+		List<Long> existingCourtIds = existingSlots.stream()
+				.map(Timeslot::getCourt)
+				.map(Court::getCourtId)
+				.distinct()
+				.collect(Collectors.toList());
+		Map<Long, Timeslot> oldTimeslots = existingSlots.stream().collect(Collectors.toMap(Timeslot::getTimeslotId, Function.identity()));
 		List<EventDto> eventDtos = events.getEvents();
 		
 		// Create Reservation
+		OrganizerVo organizerVo = new OrganizerVo();
+		organizerVo.setParticipantId(events.getParticipantId());
+		organizerVo.setCreatedDatetime(new Date());
+		Long organizerId = mapper.createOrganizer(organizerVo);
+		for (EventDto dto : eventDtos) {
+			if (!existingCourtIds.contains(dto.getLocation())) {
+				ReservationVo reservationVo = new ReservationVo();
+				reservationVo.setCourtId(dto.getLocation());
+				reservationVo.setActivityTypeId(events.getActivityTypeId());
+				reservationVo.setOrganizerId(organizerId);
+				reservationVo.setReservationDate(reservationDate);
+				reservationVo.setReservationToken(UUID.randomUUID().toString());
+				reservationVo.setParticipantCount(0);
+				mapper.createCourtReservation(reservationVo);
+			}
+		}
 		
 		List<Timeslot> timeslotDtos = DtoConverter.convertToTimeslots(eventDtos);
 		List<Timeslot> newTimeslots = timeslotDtos.stream()
@@ -392,8 +416,4 @@ public class FGEAPI {
 		return dto;
 	}
 
-	@GetMapping(path = "/test")
-	public String getTestLink() {
-		return mapper.testLink();
-	}
 }

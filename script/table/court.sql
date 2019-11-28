@@ -3,7 +3,7 @@ BEGIN
 
 	CREATE TABLE dbo.court
 	(
-		court_id            BIGINT          NOT NULL,
+		court_id            BIGINT          NOT NULL IDENTITY,
 		court_location_id   BIGINT          NOT NULL,
 		court_name          NVARCHAR(255)   NOT NULL
 	)

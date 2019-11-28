@@ -8,19 +8,20 @@ import org.apache.ibatis.annotations.Param;
 
 import edu.syr.fge.api.serializer.CourtDto;
 import edu.syr.fge.domain.AvailableActivity;
-import edu.syr.fge.domain.CourtReservation;
 import edu.syr.fge.domain.Participant;
 import edu.syr.fge.domain.Timeslot;
+import edu.syr.fge.repository.vo.OrganizerVo;
+import edu.syr.fge.repository.vo.ReservationVo;
 
 @Mapper
 public interface ISchoolMapper {
 
-	String testLink();
 	Participant getUser(@Param("email") String email, @Param("password") String password);
 	List<CourtDto> getCourts();
 	List<AvailableActivity> getAvailableActivities(@Param("courtIds") List<String> courtIds);
 	List<Timeslot> getTimeslots(@Param("reservationDate") Date reservationDate);
-	List<CourtReservation> saveCourtReservations(@Param("reservationDate") Date reservationDate);
+	Long createOrganizer(@Param("organizer") OrganizerVo organizerVo);
+	Long createCourtReservation(@Param("reservation") ReservationVo reservationVo);
 //    List<TestPlan> listAvailableTestPlans(@Param("requestedDate") Date requestDate, @Param("currentDate") Date currentDate);
 //
 //    List<TestPlan> findTestPlans(@Param("planIds") List<Long> planIds);

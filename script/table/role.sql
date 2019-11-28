@@ -3,7 +3,7 @@ BEGIN
 
 	CREATE TABLE dbo.role
 	(
-		role_id             BIGINT          NOT NULL,
+		role_id             BIGINT          NOT NULL IDENTITY,
 		page_type_id           BIGINT          NOT NULL,
 		participant_id             BIGINT          NOT NULL,
 		is_enabled          BIT             NOT NULL,

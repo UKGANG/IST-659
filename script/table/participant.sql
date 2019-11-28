@@ -3,7 +3,7 @@ BEGIN
 
 	CREATE TABLE dbo.participant
 	(
-		participant_id             BIGINT          NOT NULL,
+		participant_id             BIGINT          NOT NULL IDENTITY,
 		email               NVARCHAR(255)   NOT NULL,
 		phone_no            BIGINT             NOT NULL,
 		first_name          NVARCHAR(255)   NOT NULL,

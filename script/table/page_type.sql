@@ -3,7 +3,7 @@ BEGIN
 
 	CREATE TABLE dbo.page_type
 	(
-		page_type_id           BIGINT          NOT NULL,
+		page_type_id           BIGINT          NOT NULL IDENTITY,
 		page_name           NVARCHAR(255)   NOT NULL,
 		is_enabled          BIT             NOT NULL
 	)

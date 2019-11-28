@@ -4,12 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="edu.syr.fge.repository.mapper.ISchoolMapper">
-	<select id="testLink" resultType="java.lang.String">
-		SELECT TOP 1 airPlaneID 
-		FROM [IST659_M002_jjian03].[dbo].[FlightSchedule_t] 
-		WHERE flightNumber IN (1111, 1112);
-	</select>
-
 	<select id="getUser" resultType="edu.syr.fge.domain.Participant">
 		SELECT p.participant_id AS participantId 
 			, p.email AS email 
@@ -113,11 +107,22 @@
     	WHERE CAST(r.reservation_date AS DATE) = #{reservationDate};
     </select>
 
-    <!-- <insert id="createReservation" useGeneratedKeys="true">
+    <insert id="createOrganizer" useGeneratedKeys="true">
+		INSERT INTO IST659_M002_jjian03.dbo.organizer
+		(participant_id, created_datetime)
+		VALUES(#{organizer.participantId}, #{organizer.createdDatetime});
+    </insert>
+
+    <insert id="createCourtReservation" useGeneratedKeys="true">
 		INSERT INTO IST659_M002_jjian03.dbo.reservation
-		(reservation_id, organizer_id, court_id, activity_type_id, reservation_token, participant_count)
-		VALUES(0, 0, 0, 0, '', 0);
-    </insert> -->
+		(organizer_id, court_id, activity_type_id, reservation_token, reservation_date, participant_count)
+		VALUES(#{reservation.organizerId}
+			, #{reservation.courtId}
+			, #{reservation.activityTypeId}
+			, #{reservation.reservationToken}
+			, #{reservation.reservationDate}
+			, #{reservation.participantCount});
+    </insert>
 
 
 

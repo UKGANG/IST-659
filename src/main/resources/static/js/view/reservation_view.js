@@ -196,7 +196,7 @@ define([ 'jquery', 'underscore', 'backbone'
 
 		reserve: function() {
 			var reservationBatch = new ReservationBatch();
-			reservationBatch.set("participantId", this.participantId);
+			reservationBatch.set("participantId", this.profile.get("participantId"));
 			reservationBatch.set("activityTypeId", this.activityTypeId);
 			reservationBatch.set("date", this.reservationDate);
 			reservationBatch.set("events", this.reservations);

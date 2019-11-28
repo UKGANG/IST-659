@@ -3,7 +3,7 @@ BEGIN
 
 	CREATE TABLE dbo.timeslot
 	(
-		timeslot_id         BIGINT          NOT NULL,
+		timeslot_id         BIGINT          NOT NULL IDENTITY,
 		reservation_id      BIGINT          NOT NULL,
 		start_datetime      DATETIME        NOT NULL,
 		end_datetime        DATETIME        NOT NULL,
@@ -22,7 +22,7 @@ BEGIN
 
 	CREATE TABLE dbo.role
 	(
-		role_id             BIGINT          NOT NULL,
+		role_id             BIGINT          NOT NULL IDENTITY,
 		page_type_id           BIGINT          NOT NULL,
 		participant_id             BIGINT          NOT NULL,
 		is_enabled          BIT             NOT NULL,
@@ -41,11 +41,11 @@ BEGIN
 
 	CREATE TABLE dbo.reservation
 	(
-		reservation_id      BIGINT          NOT NULL,
+		reservation_id      BIGINT          NOT NULL IDENTITY,
 		organizer_id        BIGINT          NOT NULL,
 		court_id            BIGINT          NOT NULL,
 		activity_type_id    SMALLINT          NOT NULL,
-		reservation_token   NVARCHAR(6)     NOT NULL,
+		reservation_token   NVARCHAR(36)     NOT NULL,
 		reservation_date    DATETIME     NOT NULL,
 		participant_count   SMALLINT,
 	)
@@ -63,7 +63,7 @@ BEGIN
 
 	CREATE TABLE dbo.rental_history
 	(
-		rental_history_id	BIGINT         NOT NULL,
+		rental_history_id	BIGINT         NOT NULL IDENTITY,
 		organizer_id        BIGINT          NOT NULL,
 		gear_id             BIGINT          NOT NULL,
 		borrow_datetime     DATETIME        NOT NULL,
@@ -102,7 +102,7 @@ BEGIN
 
 	CREATE TABLE dbo.participant
 	(
-		participant_id             BIGINT          NOT NULL,
+		participant_id             BIGINT          NOT NULL IDENTITY,
 		email               NVARCHAR(255)   NOT NULL,
 		phone_no            BIGINT             NOT NULL,
 		first_name          NVARCHAR(255)   NOT NULL,
@@ -129,7 +129,7 @@ BEGIN
 
 	CREATE TABLE dbo.page_type
 	(
-		page_type_id           BIGINT          NOT NULL,
+		page_type_id           BIGINT          NOT NULL IDENTITY,
 		page_name           NVARCHAR(255)   NOT NULL,
 		is_enabled          BIT             NOT NULL
 	)
@@ -147,7 +147,7 @@ BEGIN
 
 	CREATE TABLE dbo.organizer
 	(
-		organizer_id        BIGINT          NOT NULL,
+		organizer_id        BIGINT          NOT NULL IDENTITY,
 		participant_id             BIGINT          NOT NULL,
 		created_datetime    DATETIME        NOT NULL
 	)
@@ -165,7 +165,7 @@ BEGIN
 
 	CREATE TABLE dbo.gear
 	(
-		gear_id             BIGINT          NOT NULL,
+		gear_id             BIGINT          NOT NULL IDENTITY,
 		gear_type_id        BIGINT          NOT NULL,
 		use_frequency_count INT             NOT NULL,
 		brand               NVARCHAR(255)
@@ -184,7 +184,7 @@ BEGIN
 
 	CREATE TABLE dbo.gear_type
 	(
-		gear_type_id        BIGINT          NOT NULL,
+		gear_type_id        BIGINT          NOT NULL IDENTITY,
 		gear_name           NVARCHAR(255)   NOT NULL
 	)
 
@@ -201,7 +201,7 @@ BEGIN
 
 	CREATE TABLE dbo.credential
 	(
-		credential_id       BIGINT          NOT NULL,
+		credential_id       BIGINT          NOT NULL IDENTITY,
 		participant_id             BIGINT          NOT NULL,
 		password            NVARCHAR(255)   NOT NULL,
 		activated_datetime  DATETIME        NOT NULL
@@ -220,7 +220,7 @@ BEGIN
 
 	CREATE TABLE dbo.court
 	(
-		court_id            BIGINT          NOT NULL,
+		court_id            BIGINT          NOT NULL IDENTITY,
 		court_location_id   BIGINT          NOT NULL,
 		court_name          NVARCHAR(255)   NOT NULL
 	)
@@ -238,7 +238,7 @@ BEGIN
 
 	CREATE TABLE dbo.court_location
 	(
-		court_location_id	BIGINT          NOT NULL,
+		court_location_id	BIGINT          NOT NULL IDENTITY,
 		court_location_name	NVARCHAR(255)   NOT NULL,
 	)
 
@@ -273,7 +273,7 @@ BEGIN
 
 	CREATE TABLE dbo.activity_type
 	(
-		activity_type_id    SMALLINT        NOT NULL,
+		activity_type_id    SMALLINT        NOT NULL IDENTITY,
 		activity_name       NVARCHAR(255)   NOT NULL,
 		maximum_participant SMALLINT        NOT NULL
 	)

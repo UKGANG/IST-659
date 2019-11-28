@@ -3,7 +3,7 @@ BEGIN
 
 	CREATE TABLE dbo.timeslot
 	(
-		timeslot_id         BIGINT          NOT NULL,
+		timeslot_id         BIGINT          NOT NULL IDENTITY,
 		reservation_id      BIGINT          NOT NULL,
 		start_datetime      DATETIME        NOT NULL,
 		end_datetime        DATETIME        NOT NULL,

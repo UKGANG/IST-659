@@ -3,7 +3,7 @@ BEGIN
 
 	CREATE TABLE dbo.organizer
 	(
-		organizer_id        BIGINT          NOT NULL,
+		organizer_id        BIGINT          NOT NULL IDENTITY,
 		participant_id             BIGINT          NOT NULL,
 		created_datetime    DATETIME        NOT NULL
 	)
