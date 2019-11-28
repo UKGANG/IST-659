@@ -9,6 +9,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'bootbox'
 		activityTypes : new ActivityTypes(),
 		events: {
 			"click .dropdown-menu li" : "switchDropdown",
+			"click #activity_save" : "save",
 		},
 
 		initialize : function() {
@@ -35,6 +36,17 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'bootbox'
 					$('#activityTypeModal').modal('show');
                 },
 			});
+		},
+
+		switchDropdown: function(e) {
+			var that = this;
+			var activityTypeId = "";
+			if (e) {
+				var selText = $(e.currentTarget).html();
+				$('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
+				activityTypeId = $(e.currentTarget).attr("data");
+			}
+			this.parent.activityTypeId = activityTypeId;
 		},
 
 		save: function() {

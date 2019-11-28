@@ -38,7 +38,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox', 'cspinner'
 			this.loginInfo.fetch({
                 data: this.loginInfo.toJSON(),
                 success: (function (model) {
-                    that.success(that.loginInfo.get("userId"));
+                    that.success(that.loginInfo.get("participantId"));
                 }),
                 error: (function (error) {
                     console.log(error);
@@ -47,7 +47,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox', 'cspinner'
             });
 		}, 
 
-		success: function(userId) {
+		success: function(participantId) {
 			var that = this;
 			this.header.animate({ marginLeft: '-100%' }, {"duration":400, "queue": false}, function() {
                 $(this).hide();
@@ -58,7 +58,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox', 'cspinner'
             });
 			var body = $("body");
 			setTimeout(function () {
-				that.profile.set("userId", userId);
+				that.profile.set("participantId", participantId);
 				that.profile.fetch();
 				var dashboard = new DashboardView(body);
 				dashboard.profile = that.profile;

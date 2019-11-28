@@ -168,21 +168,26 @@ public class FGEAPI {
 		courtReservations.add(courtReservation2);
 		return courtReservations;
 	}
+
 	@PostMapping(path = "/court/reservation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public EventDtoWrapper saveCourtReservations(@RequestBody EventDtoWrapper events) {
 		Date reservationDate = events.getDate();
 		Map<Long, Timeslot> oldTimeslots = mapper.getTimeslots(reservationDate)
 				.stream().collect(Collectors.toMap(Timeslot::getTimeslotId, Function.identity()));
 		List<EventDto> eventDtos = events.getEvents();
-		Map<Long, Timeslot> newTimeslots = DtoConverter.convertToTimeslots(eventDtos)
-				.stream().collect(Collectors.toMap(Timeslot::getTimeslotId, Function.identity()));
+		
+		// Create Reservation
+		
+		List<Timeslot> timeslotDtos = DtoConverter.convertToTimeslots(eventDtos);
+		List<Timeslot> newTimeslots = timeslotDtos.stream()
+				.filter(ts -> Objects.isNull(ts.getTimeslotId()))
+				.collect(Collectors.toList());
+		Map<Long, Timeslot> remainingTimeslots = timeslotDtos.stream()
+				.filter(ts -> Objects.nonNull(ts.getTimeslotId()))
+				.collect(Collectors.toMap(Timeslot::getTimeslotId, Function.identity()));
 		
 		List<Timeslot> remove = oldTimeslots.entrySet().stream()
-				.filter(e -> Objects.isNull(newTimeslots.get(e.getKey())))
-				.map(Map.Entry::getValue)
-				.collect(Collectors.toList());
-		List<Timeslot> add = newTimeslots.entrySet().stream()
-				.filter(e -> Objects.isNull(oldTimeslots.get(e.getKey())))
+				.filter(e -> Objects.isNull(remainingTimeslots.get(e.getKey())))
 				.map(Map.Entry::getValue)
 				.collect(Collectors.toList());
 

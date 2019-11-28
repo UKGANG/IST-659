@@ -112,4 +112,14 @@
 		JOIN IST659_M002_jjian03.dbo.activity_type a ON r.activity_type_id = a.activity_type_id 
     	WHERE CAST(r.reservation_date AS DATE) = #{reservationDate};
     </select>
+
+    <!-- <insert id="createReservation" useGeneratedKeys="true">
+		INSERT INTO IST659_M002_jjian03.dbo.reservation
+		(reservation_id, organizer_id, court_id, activity_type_id, reservation_token, participant_count)
+		VALUES(0, 0, 0, 0, '', 0);
+    </insert> -->
+
+
+
+
 </mapper>

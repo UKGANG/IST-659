@@ -17,7 +17,7 @@ define([ 'jquery', 'underscore', 'backbone'
 		template : _.template(ReservationHTML),
 		reservationDate: new Date(),
 		reservations : new Reservations(),
-		activityType: null,
+		activityTypeId: null,
 		activityTypeView : new ActivityTypeView(),
 		courts : new Courts(),
 		courtIdCount: new Map(),
@@ -160,10 +160,6 @@ define([ 'jquery', 'underscore', 'backbone'
 			$sked.on('timeline:click.skedtape', function(e/*, api*/) {
 				var h = e.detail.date.getHours();
 				var reservation = new Reservation();
-//				reservation.set("timeslotId", );
-//				reservation.set("participantId", e.detail.participantId);
-//				reservation.set("activityType", e.detail.activityTypeId);
-				reservation.set("name", e.detail);
 				reservation.set("location", e.detail.locationId);
 				reservation.set("start", that.setHour(date, h, 0));
 				reservation.set("end", that.setHour(date, h+1, 0));
@@ -173,7 +169,7 @@ define([ 'jquery', 'underscore', 'backbone'
 				cnt = cnt ? cnt + 1 : 1;
 				that.courtIdCount.set(e.detail.locationId, cnt);
 			    $sked.skedTape('addEvent', {
-			        name: reservation.get("name"),
+			        name: "TBD",
 			        location: reservation.get("location"),
 			        userData: {cid: reservation.cid},
 			        start: reservation.get("start"),
@@ -200,12 +196,15 @@ define([ 'jquery', 'underscore', 'backbone'
 
 		reserve: function() {
 			var reservationBatch = new ReservationBatch();
-			reservationBatch.set("activityType", this.activityType);
+			reservationBatch.set("participantId", this.participantId);
+			reservationBatch.set("activityTypeId", this.activityTypeId);
 			reservationBatch.set("date", this.reservationDate);
 			reservationBatch.set("events", this.reservations);
 			reservationBatch.save(reservationBatch.toJSON(), {
                 success: function (model, response) {
+                	$('#activityTypeModal').modal('hide');
                 	bootbox.alert("Reservation done");
+                	
                 },
                 error: function (error, response) {
                     console.log(error);
