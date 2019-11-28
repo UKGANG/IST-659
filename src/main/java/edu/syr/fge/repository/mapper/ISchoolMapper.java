@@ -20,8 +20,11 @@ public interface ISchoolMapper {
 	List<CourtDto> getCourts();
 	List<AvailableActivity> getAvailableActivities(@Param("courtIds") List<String> courtIds);
 	List<Timeslot> getTimeslots(@Param("reservationDate") Date reservationDate);
-	Long createOrganizer(@Param("organizer") OrganizerVo organizerVo);
-	Long createCourtReservation(@Param("reservation") ReservationVo reservationVo);
+	void createOrganizer(@Param("organizer") OrganizerVo organizerVo);
+	void createCourtReservation(@Param("reservation") ReservationVo reservationVo);
+	void createTimeslots(@Param("timeslots") List<Timeslot> timeslots);
+	void removeTimeslots(@Param("timeslots") List<Timeslot> timeslots);
+	void checkIn(@Param("reservationCode") String reservationCode);
 //    List<TestPlan> listAvailableTestPlans(@Param("requestedDate") Date requestDate, @Param("currentDate") Date currentDate);
 //
 //    List<TestPlan> findTestPlans(@Param("planIds") List<Long> planIds);

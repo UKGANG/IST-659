@@ -4,12 +4,21 @@ import java.util.Date;
 
 public class ReservationVo {
 
+	private Long reservationId;
 	private Long organizerId;
 	private Long courtId;
 	private Long activityTypeId;
-	private String reservationToken;
+	private String reservationCode;
 	private Date reservationDate;
 	private Integer participantCount;
+
+	public Long getReservationId() {
+		return reservationId;
+	}
+
+	public void setReservationId(Long reservationId) {
+		this.reservationId = reservationId;
+	}
 
 	public Long getOrganizerId() {
 		return organizerId;
@@ -35,12 +44,12 @@ public class ReservationVo {
 		this.activityTypeId = activityTypeId;
 	}
 
-	public String getReservationToken() {
-		return reservationToken;
+	public String getReservationCode() {
+		return reservationCode;
 	}
 
-	public void setReservationToken(String reservationToken) {
-		this.reservationToken = reservationToken;
+	public void setReservationCode(String reservationCode) {
+		this.reservationCode = reservationCode;
 	}
 
 	public Date getReservationDate() {

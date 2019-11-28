@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -172,6 +173,7 @@ public class FGEAPI {
 		return courtReservations;
 	}
 
+	@Transactional
 	@PostMapping(path = "/court/reservation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public EventDtoWrapper saveCourtReservations(@RequestBody EventDtoWrapper events) {
 		Date reservationDate = events.getDate();
@@ -184,24 +186,12 @@ public class FGEAPI {
 		Map<Long, Timeslot> oldTimeslots = existingSlots.stream().collect(Collectors.toMap(Timeslot::getTimeslotId, Function.identity()));
 		List<EventDto> eventDtos = events.getEvents();
 		
+		String reservationCode = UUID.randomUUID().toString();
 		// Create Reservation
 		OrganizerVo organizerVo = new OrganizerVo();
 		organizerVo.setParticipantId(events.getParticipantId());
 		organizerVo.setCreatedDatetime(new Date());
-		Long organizerId = mapper.createOrganizer(organizerVo);
-		for (EventDto dto : eventDtos) {
-			if (!existingCourtIds.contains(dto.getLocation())) {
-				ReservationVo reservationVo = new ReservationVo();
-				reservationVo.setCourtId(dto.getLocation());
-				reservationVo.setActivityTypeId(events.getActivityTypeId());
-				reservationVo.setOrganizerId(organizerId);
-				reservationVo.setReservationDate(reservationDate);
-				reservationVo.setReservationToken(UUID.randomUUID().toString());
-				reservationVo.setParticipantCount(0);
-				mapper.createCourtReservation(reservationVo);
-			}
-		}
-		
+
 		List<Timeslot> timeslotDtos = DtoConverter.convertToTimeslots(eventDtos);
 		List<Timeslot> newTimeslots = timeslotDtos.stream()
 				.filter(ts -> Objects.isNull(ts.getTimeslotId()))
@@ -215,14 +205,38 @@ public class FGEAPI {
 				.map(Map.Entry::getValue)
 				.collect(Collectors.toList());
 
-//		mapper.add();
-//		mapper.remove();
+		mapper.createOrganizer(organizerVo);
+		for (EventDto dto : eventDtos) {
+			if (!existingCourtIds.contains(dto.getLocation())) {
+				ReservationVo reservationVo = new ReservationVo();
+				reservationVo.setCourtId(dto.getLocation());
+				reservationVo.setActivityTypeId(events.getActivityTypeId());
+				reservationVo.setOrganizerId(organizerVo.getOrganizerId());
+				reservationVo.setReservationDate(reservationDate);
+				reservationVo.setReservationCode(reservationCode);
+				reservationVo.setParticipantCount(0);
+				mapper.createCourtReservation(reservationVo);
+				List<Timeslot> tss = newTimeslots.stream()
+					.filter(ts -> ts.getCourt().getCourtId() == dto.getLocation())
+					.peek(ts -> ts.setReservationId(reservationVo.getReservationId()))
+					.collect(Collectors.toList());
+				mapper.createTimeslots(tss);
+			}
+		}
+
+		if (!remove.isEmpty()) {
+			mapper.removeTimeslots(remove);
+		}
+
+		events.setReservationCode(reservationCode);
 		return events;
 	}
 
+	@Transactional
 	@PutMapping(path = "/court/reservation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ReservationDto checkIn(@RequestBody ReservationDto reservationDto) {
 		System.out.println(String.format("Check In succeed: %s", reservationDto.getReservationCode()));
+		mapper.checkIn(reservationDto.getReservationCode());
 		return reservationDto;
 	}
 

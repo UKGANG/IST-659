@@ -113,7 +113,7 @@ define([ 'jquery', 'underscore', 'backbone'
 			var that = this;
 			var events = that.reservations;
 			if (events.length) {
-				events = events.map(function(i) {
+				events.forEach(function(i) {
 					i.set("data", {
 						timeslotId : i.get("timeslotId"),
 						participantId : i.get("participantId")
@@ -195,6 +195,7 @@ define([ 'jquery', 'underscore', 'backbone'
 		},
 
 		reserve: function() {
+			var that = this;
 			var reservationBatch = new ReservationBatch();
 			reservationBatch.set("participantId", this.profile.get("participantId"));
 			reservationBatch.set("activityTypeId", this.activityTypeId);
@@ -203,7 +204,10 @@ define([ 'jquery', 'underscore', 'backbone'
 			reservationBatch.save(reservationBatch.toJSON(), {
                 success: function (model, response) {
                 	$('#activityTypeModal').modal('hide');
-                	bootbox.alert("Reservation done");
+                	that.courtIdCount.clear();
+                	//that.reservations.reset();
+                	//that.render();
+                	bootbox.alert("Success! <br><br>Reservation Code: <br>" + response.reservationCode);
                 	
                 },
                 error: function (error, response) {

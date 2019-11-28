@@ -7,10 +7,10 @@ public class EventDtoWrapper {
 
 	private Long participantId;
 	private Long activityTypeId;
+	private String reservationCode;
 	private Date date;
 	private List<EventDto> events;
 
-	
 	public Long getParticipantId() {
 		return participantId;
 	}
@@ -25,6 +25,14 @@ public class EventDtoWrapper {
 
 	public void setActivityTypeId(Long activityTypeId) {
 		this.activityTypeId = activityTypeId;
+	}
+
+	public String getReservationCode() {
+		return reservationCode;
+	}
+
+	public void setReservationCode(String reservationCode) {
+		this.reservationCode = reservationCode;
 	}
 
 	public Date getDate() {

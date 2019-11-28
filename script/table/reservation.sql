@@ -7,8 +7,9 @@ BEGIN
 		organizer_id        BIGINT          NOT NULL,
 		court_id            BIGINT          NOT NULL,
 		activity_type_id    SMALLINT          NOT NULL,
-		reservation_token   NVARCHAR(36)     NOT NULL,
+		reservation_code   NVARCHAR(36)     NOT NULL,
 		participant_count   SMALLINT,
+		checked_in			BIT
 	)
 
 	PRINT 'CREATE TABLE dbo.reservation'

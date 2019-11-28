@@ -49,10 +49,18 @@
 		FROM IST659_M002_jjian03.dbo.activity_type a
 		JOIN IST659_M002_jjian03.dbo.available_activity aa ON a.activity_type_id = aa.activity_type_id 
 		JOIN IST659_M002_jjian03.dbo.court c ON aa.court_id = c.court_id 
-		WHERE c.court_id IN 
-		<foreach item="courtId" index="index" collection="courtIds" open="(" separator="," close=")">
-			#{courtId}
-		</foreach>;
+		WHERE 
+		<choose>
+			<when test="courtIds==null || courtIds.isEmpty()">
+				1 = 1 
+			</when>
+			<otherwise>
+				c.court_id IN 
+				<foreach item="courtId" index="index" collection="courtIds" open="(" separator="," close=")">
+					#{courtId}
+				</foreach>;
+			</otherwise>
+		</choose>
 	</select>
 <!-- 
 	<resultMap type="edu.syr.fge.domain.CourtReservation" id="CourtReservation">
@@ -107,24 +115,43 @@
     	WHERE CAST(r.reservation_date AS DATE) = #{reservationDate};
     </select>
 
-    <insert id="createOrganizer" useGeneratedKeys="true">
+    <insert id="createOrganizer" useGeneratedKeys="true" keyProperty="organizerId" keyColumn="organizer_id">
 		INSERT INTO IST659_M002_jjian03.dbo.organizer
 		(participant_id, created_datetime)
 		VALUES(#{organizer.participantId}, #{organizer.createdDatetime});
     </insert>
 
-    <insert id="createCourtReservation" useGeneratedKeys="true">
+    <insert id="createCourtReservation" useGeneratedKeys="true" keyProperty="reservationId" keyColumn="reservation_id">
 		INSERT INTO IST659_M002_jjian03.dbo.reservation
-		(organizer_id, court_id, activity_type_id, reservation_token, reservation_date, participant_count)
+		(organizer_id, court_id, activity_type_id, reservation_code, reservation_date, participant_count)
 		VALUES(#{reservation.organizerId}
 			, #{reservation.courtId}
 			, #{reservation.activityTypeId}
-			, #{reservation.reservationToken}
+			, #{reservation.reservationCode}
 			, #{reservation.reservationDate}
 			, #{reservation.participantCount});
     </insert>
 
+    <insert id="createTimeslots" useGeneratedKeys="true">
+		INSERT INTO IST659_M002_jjian03.dbo.timeslot
+		(reservation_id, start_datetime, end_datetime)
+		VALUES
+		<foreach item="timeslot" index="index" collection="timeslots" separator=",">
+			(#{timeslot.reservationId}, #{timeslot.startDatetime}, #{timeslot.endDatetime})
+		</foreach>;
+		;
+    </insert>
 
+    <delete id="removeTimeslots">
+        DELETE FROM IST659_M002_jjian03.dbo.timeslot 
+        WHERE timeslot_id IN 
+        <foreach item="timeslot" index="index" collection="timeslots" open="(" separator="," close=")">
+			#{timeslot.timeslotId}
+		</foreach>;
+    </delete>
 
-
+    <update id="checkIn">
+         UPDATE IST659_M002_jjian03.dbo.reservation SET checked_in=1 
+         WHERE reservation_code=#{reservationCode}; 
+    </update>
 </mapper>
