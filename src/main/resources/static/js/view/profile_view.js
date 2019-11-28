@@ -25,40 +25,48 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'bootbox'
 		},
 
 		setValue : function(e) {
+			e.stopPropagation();
 			this.profile.set($(e.currentTarget).attr("id"), $(e.currentTarget).val())
 		},
 
 		showCalendar: function() {
+			e.stopPropagation();
 			$("#dob").datepicker("show");
 		},
 
-		initialize : function(parent) {
+		initialize : function() {
 			console.log('Profile status initialized');
-			this.parent = parent;
+//			_.bindAll(this, "save", "showCalendar", "setValue");
 		},
 
 		render: function() {
-			this.$el.modal();
+			var that = this;
 			this.$el.html(this.template(this.profile.toJSON()));
 			$("#dob").datepicker();
 		},
 
-		save: function() {
+		save: function(e) {
+			e.stopPropagation();
 			var that = this;
+			if ("" == this.profile.get("userId")) {
+				this.profile.set("userId", null);
+			}
 			this.profile.save({attrs : this.profile.attrs}, {
 				success: function (model) {
 					that.profile = new Profile();
 					$('#myModal').modal('hide');
 					bootbox.alert("Save or update done! ");
 					$("#emailCriteria").val("");
-					that.parent.search();
+					if (that.parent) {
+						that.parent.search();
+					}
                 },
                 error: function (model, response) {
                     console.log(response);
                     bootbox.alert("Search user failed");
                 }
 			});
-		}
+		},
 	});
 
 	return ProfileView;

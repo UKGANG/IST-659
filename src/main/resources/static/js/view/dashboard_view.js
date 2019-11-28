@@ -1,19 +1,23 @@
 define([ 'jquery', 'underscore', 'backbone', 'bootbox'
+        , 'model/profile'
         , 'model/dashboard'
         , 'view/reservation_view'
         , 'view/rental_view'
         , 'view/maintenance_view'
         , 'view/membership_view'
         , 'view/page_access_view'
+        , 'view/profile_view'
         , 'text!template/dashboard.html'
 		], function($, _, Backbone, bootbox
-		, Dashboard
-		, ReservationView
-		, RentalView
-		, MaintenanceView
-		, MembershipView
-		, PageAccessView
-		, DashboardHTML) {
+				, Profile
+				, Dashboard
+				, ReservationView
+				, RentalView
+				, MaintenanceView
+				, MembershipView
+				, PageAccessView
+				, ProfileView
+				, DashboardHTML) {
 	var DashboardView = Backbone.View.extend({
 		el : null,
 		template : _.template(DashboardHTML),
@@ -24,6 +28,8 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox'
 		maintenanceView: null,
 		membershipView: null,
 		pageAccessView: null,
+		profile: null,
+		profileView: null,
 		events: {
 			"click #wrapper .nav-item" : "redirect"
 		},
@@ -31,9 +37,6 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox'
 		initialize : function(root) {
 			console.log('Dashboard initialized');
 			this.$el = root;
-			this.render();
-			_.bindAll(this, "redirect");
-			
 		},
 
 		render: function() {
@@ -81,8 +84,12 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox'
 			this.maintenanceView = new MaintenanceView(this.container);
 			this.membershipView = new MembershipView(this.container);
 			this.pageAccessView = new PageAccessView(this.container);
+			this.profileView = new ProfileView();
+			this.profileView.setElement(this.container);
+	        this.profileView.profile = this.profile;
 			this.reservationView.render();
-			
+			_.bindAll(this, "redirect");
+
 			this.$el.fadeIn(400);
 		},
 
@@ -108,6 +115,9 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox'
 					break;
 				case "page_access":
 					this.pageAccessView.render();
+					break;
+				case "profile":
+					this.profileView.render();
 					break;
 				default:
 					var errMsg = "Missing module: " + module;

@@ -3,7 +3,6 @@ define([ 'backbone'], function(Backbone) {
         url: "/fge/user",
         idAttribute: "userId",
         sync : mySyncFunction,
-        save : null,
         defaults : function() {
             return {
             	userId : '',
@@ -24,9 +23,10 @@ define([ 'backbone'], function(Backbone) {
     });
 
     function mySyncFunction(method, model, options){
-    	if ("undefined" != typeof(model.get("userId")) 
-    			&& null != model.get("userId").length 
-    			&& model.get("userId").length > 0) {
+    	if ("read" == method 
+    			&& model.get("userId")) {
+    		options.url = model.url + "/" + model.get("userId")
+    	} else if (model.get("userId")) {
     		method = "update"
     	}
     	return Backbone.sync(method, model, options);

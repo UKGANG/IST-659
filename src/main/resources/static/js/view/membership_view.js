@@ -29,9 +29,10 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		render: function() {
 			var that = this;
 			this.$el.html(this.template());
+			this.profileView.setElement($("#myModal>.modal-dialog>.modal-content"));
 			this.renderTable();
 			this.search();
-			this.profileView.setElement($('#myModal'));
+
 		},
 
 		renderTable: function() {
@@ -73,7 +74,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		            that.table.$('tr.selected').removeClass('selected');
 		            $(this).addClass('selected');
 		        }
-		        var rowData = that.table.rows( { selected: true } ).data()[0];
+		        var rowData = that.table.row('.selected').data();
 		        var user = that.users.filter(function(e) {
 		        	return e.get("userId") == rowData.userId;
 		        })[0];
@@ -101,9 +102,11 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		},
 		add: function() {
 			this.profileView.render();
+			$('#myModal').modal('show');
 		},
 		modify: function() {
 			this.profileView.render();
+			$('#myModal').modal('show');
 		},
 	});
 

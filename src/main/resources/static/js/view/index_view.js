@@ -1,10 +1,10 @@
 define([ 'jquery', 'underscore', 'backbone', 'bootbox', 'cspinner'
-        , 'model/loginInfo', 'model/dashboard'
-        , 'view/dashboard_view'
+        , 'model/loginInfo', 'model/profile', 'model/dashboard'
+        , 'view/dashboard_view', 'view/profile_view'
         , 'text!template/login.html', 'text!template/dashboard.html'
 		], function($, _, Backbone, bootbox, CSpinner
-		, LoginInfo, Dashboard
-		, DashboardView
+		, LoginInfo, Profile, Dashboard
+		, DashboardView, ProfileView
 		, LoginHTML, DashboardHTML) {
 	var IndexView = Backbone.View.extend({
 		header : $(".header"),
@@ -12,6 +12,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox', 'cspinner'
 		footer : $(".footer"),
 		template : _.template(LoginHTML),
 		loginInfo : new LoginInfo(),
+		profile: new Profile(),
 		events: {
 			"submit" : "login",
 			"change #email": "setEmail",
@@ -38,7 +39,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox', 'cspinner'
                 data: this.loginInfo.toJSON(),
                 type: 'GET',
                 success: (function (model) {
-                    that.success();
+                    that.success(that.loginInfo.get("userId"));
                 }),
                 error: (function (error) {
                     console.log(error);
@@ -47,7 +48,8 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox', 'cspinner'
             });
 		}, 
 
-		success: function() {
+		success: function(userId) {
+			var that = this;
 			this.header.animate({ marginLeft: '-100%' }, {"duration":400, "queue": false}, function() {
                 $(this).hide();
             });
@@ -55,9 +57,13 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox', 'cspinner'
 			this.footer.animate({ marginLeft: '100%' }, {"duration":400, "queue": false}, function() {
                 $(this).hide();
             });
-			var that = $("body");
+			var body = $("body");
 			setTimeout(function () {
-				new DashboardView(that);
+				that.profile.set("userId", userId);
+				that.profile.fetch();
+				var dashboard = new DashboardView(body);
+				dashboard.profile = that.profile;
+				dashboard.render();
 			}, 1000);
 		}
 	});

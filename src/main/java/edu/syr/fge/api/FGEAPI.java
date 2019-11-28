@@ -46,6 +46,7 @@ public class FGEAPI {
 			throw new FGEException("User not found");
 		}
 		User access = new User();
+		access.setUserId(1L);
 		access.setEmail(email);
 		access.setPassword(password);
 		return access;
@@ -203,6 +204,21 @@ public class FGEAPI {
 	public GearIdsDto renewGears(@RequestBody GearIdsDto dto) {
 		System.out.println(String.format("Refrubish: %d", dto.getGearIds().size()));
 		return dto;
+	}
+
+	@GetMapping(path = "/user/{userId}")
+	public UserDto getUser(@PathVariable("userId") Long userId) {
+		UserDto user = new UserDto();
+		user.setUserId(1L);
+		user.setFirstName("firstName1");
+		user.setMiddleName("middleName1");
+		user.setLastName("lastName1");
+		user.setEmail("email1");
+		user.setPhoneNo("phoneNo1");
+		user.setGender("male");
+		user.setSsn("abc");
+		user.setDob(new Date());
+		return user;
 	}
 
 	@GetMapping(path = "/user")
