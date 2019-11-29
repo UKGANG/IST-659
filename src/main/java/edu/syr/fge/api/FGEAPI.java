@@ -257,30 +257,6 @@ public class FGEAPI {
 	@GetMapping(path = "/user")
 	public List<UserDto> listUser(@RequestParam(required = false, value = "email") String email) {
 		return mapper.searchParticipants(email);
-//		UserDto user1 = new UserDto();
-//		UserDto user2 = new UserDto();
-//		user1.setParticipantId(1L);
-//		user2.setParticipantId(2L);
-//		user1.setFirstName("firstName1");
-//		user2.setFirstName("firstName2");
-//		user1.setMiddleName("middleName1");
-//		user2.setMiddleName("middleName2");
-//		user1.setLastName("lastName1");
-//		user2.setLastName("lastName2");
-//		user1.setEmail("email1");
-//		user2.setEmail("email2");
-//		user1.setPhoneNo("phoneNo1");
-//		user2.setPhoneNo("phoneNo2");
-//		user1.setGender("male");
-//		user2.setGender("female");
-//		user1.setSsn("abc");
-//		user2.setSsn("def");
-//		user1.setDob(new Date());
-//		user2.setDob(new Date());
-//		List<UserDto> returns = new ArrayList<>();
-//		returns.add(user1);
-//		returns.add(user2);
-//		return returns;
 	}
 
 	@PostMapping(path = "/user")
@@ -301,46 +277,13 @@ public class FGEAPI {
 
 	@GetMapping(path = "/pageTypes")
 	public List<PageTypeDto> listPageType() {
-		PageTypeDto dto1 = new PageTypeDto();
-		PageTypeDto dto2 = new PageTypeDto();
-		dto1.setPageTypeId(1L);
-		dto2.setPageTypeId(2L);
-		dto1.setPageName("Page1");
-		dto2.setPageName("Page2");
-		List<PageTypeDto> returns = new ArrayList<>();
-		returns.add(dto1);
-		returns.add(dto2);
-
-		return returns;
+		return mapper.retrievePageTypes();
 	}
 
 	@GetMapping(path = "/role")
 	public List<RoleDto> getRoles(@RequestParam(required = false, value = "pageTypeId") Long pageTypeId) {
 		System.out.println(String.format("Page Type Id received: %d", pageTypeId));
-		RoleDto role1 = new RoleDto();
-		RoleDto role2 = new RoleDto();
-		role1.setRoleId(1L);
-		role2.setRoleId(1L);
-		PageTypeDto pageType1 = new PageTypeDto();
-		PageTypeDto pageType2 = new PageTypeDto();
-		pageType1.setPageTypeId(1L);
-		pageType2.setPageTypeId(2L);
-		pageType1.setPageName("Page1");
-		pageType2.setPageName("Page2");
-		role1.setPageType(pageType1);
-		role2.setPageType(pageType2);
-		UserDto user1 = new UserDto();
-		UserDto user2 = new UserDto();
-		user1.setParticipantId(1L);
-		user2.setParticipantId(2L);
-		user1.setEmail("email1");
-		user2.setEmail("email2");
-		role1.setUser(user1);
-		role2.setUser(user2);
-		List<RoleDto> returns = new ArrayList<>();
-		returns.add(role1);
-		returns.add(role2);
-		return returns;
+		return mapper.getPageAccessList(pageTypeId);
 	}
 
 	@DeleteMapping(path = "/role/{pageTypeId}")

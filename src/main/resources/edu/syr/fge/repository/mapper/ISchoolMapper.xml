@@ -287,13 +287,13 @@
 		, created_datetime
 		, no_show_count
 	FROM IST659_M002_jjian03.dbo.participant
-	<choose>
-		<when test="email == null || email.length() == 0">
-		</when>
-		<otherwise>
-			WHERE email=#{email}
-		</otherwise>
-	</choose>;
+		<choose>
+			<when test="email == null || email.length() == 0">
+			</when>
+			<otherwise>
+				WHERE email=#{email}
+			</otherwise>
+		</choose>;
     </select>
 
     <insert id="createCredential" useGeneratedKeys="true">
@@ -327,4 +327,47 @@
 		WHERE participant_id=#{participant.participantId};
     </insert>
 
+	<resultMap type="edu.syr.fge.api.serializer.PageTypeDto" id="PageType">
+        <id property="pageTypeId" column="page_type_id" />
+        <id property="pageName" column="page_name" />
+    </resultMap>
+
+
+    <select id="retrievePageTypes" resultMap="PageType">
+		SELECT page_type_id, page_name
+		FROM IST659_M002_jjian03.dbo.page_type
+		ORDER BY page_type_id ASC;
+    </select>
+
+	<resultMap type="edu.syr.fge.api.serializer.RoleDto" id="Role">
+        <id property="roleId" column="role_id" />
+        <association property="pageType"
+                     javaType="edu.syr.fge.api.serializer.PageTypeDto" columnPrefix="pt_" >
+            <id property="pageTypeId" column="id" />
+            <id property="pageName" column="name" />
+        </association>
+        <association property="user"
+                     javaType="edu.syr.fge.api.serializer.UserDto" columnPrefix="p_" >
+            <id property="participantId" column="id" />
+        </association>
+    </resultMap>
+
+    <select id="getPageAccessList" resultMap="Role">
+		SELECT 
+			r.role_id
+			, pt.page_type_id AS pt_id
+			, pt.page_name AS pt_name 
+			, p.participant_id AS p_id 
+		FROM IST659_M002_jjian03.dbo.role r 
+		JOIN IST659_M002_jjian03.dbo.page_type pt ON r.page_type_id = pt.page_type_id 
+		JOIN IST659_M002_jjian03.dbo.participant p ON r.participant_id = p.participant_id 
+		<choose>
+			<when test="pageTypeId == null || pageTypeId == 0">
+			</when>
+			<otherwise>
+				WHERE pt.page_type_id = #{pageTypeId}
+			</otherwise>
+		</choose>
+		ORDER BY pt.page_type_id ASC;
+    </select>
 </mapper>

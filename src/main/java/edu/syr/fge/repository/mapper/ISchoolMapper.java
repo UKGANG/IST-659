@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import edu.syr.fge.api.serializer.CourtDto;
+import edu.syr.fge.api.serializer.PageTypeDto;
+import edu.syr.fge.api.serializer.RoleDto;
 import edu.syr.fge.api.serializer.UserDto;
 import edu.syr.fge.domain.AvailableActivity;
 import edu.syr.fge.domain.GearType;
@@ -40,12 +42,7 @@ public interface ISchoolMapper {
 	void createParticipant(@Param("participant") UserDto dto);
 	void updateCredential(@Param("participant") UserDto dto);
 	void updateParticipant(@Param("participant") UserDto dto);
-//    List<TestPlan> listAvailableTestPlans(@Param("requestedDate") Date requestDate, @Param("currentDate") Date currentDate);
-//
-//    List<TestPlan> findTestPlans(@Param("planIds") List<Long> planIds);
-//
-//    void saveVariantRetrievalHistory(OfferVariantObjectRetrievalLog variantRetrievalHistory);
-//
-//    void saveVariantRetrievalHistoryChild(OfferVariantObjectRetrievalLog variantRetrievalHistory);
+	List<PageTypeDto> retrievePageTypes();
+	List<RoleDto> getPageAccessList(@Param("pageTypeId") Long pageTypeId);
 
 }
