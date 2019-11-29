@@ -17,31 +17,35 @@
           <span>Reservation</span>
         </a>
       </li>
-      <li class="nav-item" id="rental">
-        <a class="nav-link" href="#">
-          <i class="fas fa-fw fa-hand-holding"></i>
-          <span>Rental</span></a>
-      </li>
-      <li class="nav-item" id="maintenance">
-        <a class="nav-link" href="#">
-          <i class="fas fa-fw fa-tools"></i>
-          <span>Maintenance</span></a>
-      </li>
-      <li class="nav-item" id="membership">
-        <a class="nav-link" href="#">
-          <i class="fas fa-fw fa-users"></i>
-          <span>Membership</span></a>
-      </li>
-      <li class="nav-item" id="page_access">
-        <a class="nav-link" href="#">
-          <i class="fas fa-fw fa-pager"></i>
-          <span>Page Access</span></a>
-      </li>
-      <li class="nav-item" id="profile">
-        <a class="nav-link" href="#">
-          <i class="fas fa-fw fa-pager"></i>
-          <span>Profile</span></a>
-      </li>
+	      <%if (2 == participantId || 3 == participantId) {%>
+	      <li class="nav-item" id="rental">
+	        <a class="nav-link" href="#">
+	          <i class="fas fa-fw fa-hand-holding"></i>
+	          <span>Rental</span></a>
+	      </li>
+	      <li class="nav-item" id="maintenance">
+	        <a class="nav-link" href="#">
+	          <i class="fas fa-fw fa-tools"></i>
+	          <span>Maintenance</span></a>
+	      </li>
+		      <%if (3 == participantId) {%>
+		      <li class="nav-item" id="membership">
+		        <a class="nav-link" href="#">
+		          <i class="fas fa-fw fa-users"></i>
+		          <span>Membership</span></a>
+		      </li>
+		      <li class="nav-item" id="page_access">
+		        <a class="nav-link" href="#">
+		          <i class="fas fa-fw fa-pager"></i>
+		          <span>Page Access</span></a>
+		      </li>
+		      <li class="nav-item" id="profile">
+		        <a class="nav-link" href="#">
+		          <i class="fas fa-fw fa-pager"></i>
+		          <span>Profile</span></a>
+		      </li>
+		      <%}%>
+	      <%}%>
     </ul>
 
     <div id="content-wrapper">

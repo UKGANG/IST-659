@@ -50,7 +50,7 @@ define([ 'jquery', 'underscore', 'backbone'
 
 		render: function() {
 			var that = this;
-			this.$el.html(this.template());
+			this.$el.html(this.template({participantId:this.profile.get("participantId")}));
 			$("#date").datepicker({
 			    onSelect: function(dateText) {
 			    	that.buildSlot(new Date(Date.parse(dateText)));

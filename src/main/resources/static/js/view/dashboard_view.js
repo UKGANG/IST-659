@@ -40,7 +40,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox'
 		},
 
 		render: function() {
-			this.$el.html(this.template());
+			this.$el.html(this.template({participantId:this.profile.get("participantId")}));
 			// Toggle the side navigation
 			$("#sidebarToggle").on('click', function(e) {
 				e.preventDefault();
