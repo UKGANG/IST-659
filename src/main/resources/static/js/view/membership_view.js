@@ -30,6 +30,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 			var that = this;
 			this.$el.html(this.template());
 			this.profileView.setElement($("#myModal>.modal-dialog>.modal-content"));
+			this.users.reset();
 			this.renderTable();
 			this.search();
 
@@ -76,9 +77,9 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		        }
 		        var rowData = that.table.row('.selected').data();
 		        var user = that.users.filter(function(e) {
-		        	return e.get("userId") == rowData.userId;
+		        	return e.get("participantId") == rowData.participantId;
 		        })[0];
-		        that.profileView.profile = user;
+		        that.profileView.profile = user.clone();
 		    } );
 		},
 
@@ -101,6 +102,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 			});
 		},
 		add: function() {
+			this.profileView.profile.attributes = this.profileView.profile.defaults();
 			this.profileView.render();
 			$('#myModal').modal('show');
 		},

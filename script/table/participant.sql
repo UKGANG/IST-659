@@ -5,7 +5,7 @@ BEGIN
 	(
 		participant_id             BIGINT          NOT NULL IDENTITY,
 		email               NVARCHAR(255)   NOT NULL,
-		phone_no            BIGINT             NOT NULL,
+		phone_no            NVARCHAR(255)             NOT NULL,
 		first_name          NVARCHAR(255)   NOT NULL,
 		middle_name         NVARCHAR(255),
 		last_name           NVARCHAR(255)   NOT NULL,

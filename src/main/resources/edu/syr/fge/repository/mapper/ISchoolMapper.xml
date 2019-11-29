@@ -259,4 +259,72 @@
 			#{gearId}
 		</foreach>;
     </update>
+
+	<resultMap type="edu.syr.fge.api.serializer.UserDto" id="UserDto">
+        <id property="participantId" column="participant_id" />
+        <id property="email" column="email" />
+        <id property="phoneNo" column="phone_no" />
+        <id property="firstName" column="first_name" />
+        <id property="middleName" column="middle_name" />
+        <id property="lastName" column="last_name" />
+        <id property="gender" column="gender" />
+        <id property="dob" column="dob" />
+        <id property="ssn" column="ssn" />
+    </resultMap>
+
+    <select id="searchParticipants" resultMap="UserDto">
+	SELECT 
+		participant_id
+		, email
+		, phone_no
+		, first_name
+		, middle_name
+		, last_name
+		, gender
+		, dob
+		, age
+		, ssn
+		, created_datetime
+		, no_show_count
+	FROM IST659_M002_jjian03.dbo.participant
+	<choose>
+		<when test="email == null || email.length() == 0">
+		</when>
+		<otherwise>
+			WHERE email=#{email}
+		</otherwise>
+	</choose>;
+    </select>
+
+    <insert id="createCredential" useGeneratedKeys="true">
+		INSERT INTO IST659_M002_jjian03.dbo.credential
+		(participant_id, password, activated_datetime)
+		VALUES(#{participant.participantId}, #{participant.password}, getdate());
+    </insert>
+
+    <insert id="createParticipant" useGeneratedKeys="true" keyProperty="participantId" keyColumn="participant_id">
+		INSERT INTO IST659_M002_jjian03.dbo.participant
+		(email, phone_no, first_name, middle_name, last_name, gender, dob, age, ssn, created_datetime, no_show_count)
+		VALUES(#{participant.email}, #{participant.phoneNo}, #{participant.firstName}, #{participant.middleName}, #{participant.lastName}
+		, #{participant.gender}, #{participant.dob}, null, #{participant.ssn}, getdate(), 0);
+    </insert>
+
+    <insert id="updateCredential" useGeneratedKeys="true">
+		UPDATE IST659_M002_jjian03.dbo.credential SET password = #{participant.password}
+		WHERE participant_id = #{participant.participantId};
+    </insert>
+
+    <insert id="updateParticipant" useGeneratedKeys="true" keyProperty="participantId" keyColumn="participant_id">
+		UPDATE IST659_M002_jjian03.dbo.participant
+		SET email=#{participant.email}
+		, phone_no=#{participant.phoneNo}
+		, first_name=#{participant.firstName}
+		, middle_name=#{participant.middleName}
+		, last_name=#{participant.lastName}
+		, gender=#{participant.gender}
+		, dob=#{participant.dob}
+		, ssn=#{participant.ssn}
+		WHERE participant_id=#{participant.participantId};
+    </insert>
+
 </mapper>

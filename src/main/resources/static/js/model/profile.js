@@ -5,7 +5,7 @@ define([ 'backbone'], function(Backbone) {
         sync : mySyncFunction,
         defaults : function() {
             return {
-            	profileId : '',
+            	participantId : '',
                 email : '',
                 password : '',
                 repeat : '',

@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import edu.syr.fge.api.serializer.CourtDto;
+import edu.syr.fge.api.serializer.UserDto;
 import edu.syr.fge.domain.AvailableActivity;
 import edu.syr.fge.domain.GearType;
 import edu.syr.fge.domain.Participant;
@@ -34,6 +35,11 @@ public interface ISchoolMapper {
 	void returnGears(@Param("gearIds") List<Long> gearIds);
 	List<GearType> getGearTypes();
 	void refrubish(@Param("gearIds") List<Long> gearIds);
+	List<UserDto> searchParticipants(@Param("email") String email);
+	void createCredential(@Param("participant") UserDto dto);
+	void createParticipant(@Param("participant") UserDto dto);
+	void updateCredential(@Param("participant") UserDto dto);
+	void updateParticipant(@Param("participant") UserDto dto);
 //    List<TestPlan> listAvailableTestPlans(@Param("requestedDate") Date requestDate, @Param("currentDate") Date currentDate);
 //
 //    List<TestPlan> findTestPlans(@Param("planIds") List<Long> planIds);

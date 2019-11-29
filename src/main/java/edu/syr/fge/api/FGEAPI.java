@@ -256,41 +256,46 @@ public class FGEAPI {
 
 	@GetMapping(path = "/user")
 	public List<UserDto> listUser(@RequestParam(required = false, value = "email") String email) {
-		UserDto user1 = new UserDto();
-		UserDto user2 = new UserDto();
-		user1.setParticipantId(1L);
-		user2.setParticipantId(2L);
-		user1.setFirstName("firstName1");
-		user2.setFirstName("firstName2");
-		user1.setMiddleName("middleName1");
-		user2.setMiddleName("middleName2");
-		user1.setLastName("lastName1");
-		user2.setLastName("lastName2");
-		user1.setEmail("email1");
-		user2.setEmail("email2");
-		user1.setPhoneNo("phoneNo1");
-		user2.setPhoneNo("phoneNo2");
-		user1.setGender("male");
-		user2.setGender("female");
-		user1.setSsn("abc");
-		user2.setSsn("def");
-		user1.setDob(new Date());
-		user2.setDob(new Date());
-		List<UserDto> returns = new ArrayList<>();
-		returns.add(user1);
-		returns.add(user2);
-		return returns;
+		return mapper.searchParticipants(email);
+//		UserDto user1 = new UserDto();
+//		UserDto user2 = new UserDto();
+//		user1.setParticipantId(1L);
+//		user2.setParticipantId(2L);
+//		user1.setFirstName("firstName1");
+//		user2.setFirstName("firstName2");
+//		user1.setMiddleName("middleName1");
+//		user2.setMiddleName("middleName2");
+//		user1.setLastName("lastName1");
+//		user2.setLastName("lastName2");
+//		user1.setEmail("email1");
+//		user2.setEmail("email2");
+//		user1.setPhoneNo("phoneNo1");
+//		user2.setPhoneNo("phoneNo2");
+//		user1.setGender("male");
+//		user2.setGender("female");
+//		user1.setSsn("abc");
+//		user2.setSsn("def");
+//		user1.setDob(new Date());
+//		user2.setDob(new Date());
+//		List<UserDto> returns = new ArrayList<>();
+//		returns.add(user1);
+//		returns.add(user2);
+//		return returns;
 	}
 
 	@PostMapping(path = "/user")
 	public UserDto createUser(@RequestBody UserDto dto) {
 		System.out.println(String.format("Create user done: %s", dto.getEmail()));
+		mapper.createParticipant(dto);
+		mapper.createCredential(dto);
 		return dto;
 	}
 
 	@PutMapping(path = "/user")
 	public UserDto updateUser(@RequestBody UserDto dto) {
 		System.out.println(String.format("Update user done: %s", dto.getEmail()));
+		mapper.updateCredential(dto);
+		mapper.updateParticipant(dto);
 		return dto;
 	}
 

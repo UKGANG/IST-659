@@ -29,7 +29,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'bootbox'
 			this.profile.set($(e.currentTarget).attr("id"), $(e.currentTarget).val())
 		},
 
-		showCalendar: function() {
+		showCalendar: function(e) {
 			e.stopPropagation();
 			$("#dob").datepicker("show");
 		},
@@ -48,8 +48,8 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'bootbox'
 		save: function(e) {
 			e.stopPropagation();
 			var that = this;
-			if ("" == this.profile.get("userId")) {
-				this.profile.set("userId", null);
+			if ("" == this.profile.get("participantId")) {
+				this.profile.set("participantId", null);
 			}
 			this.profile.save({attrs : this.profile.attrs}, {
 				success: function (model) {
