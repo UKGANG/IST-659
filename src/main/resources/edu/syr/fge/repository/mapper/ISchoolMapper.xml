@@ -189,26 +189,35 @@
     </select>
 
     <select id="retrieveGearsByType" resultMap="Gear">
-		SELECT g.gear_id 
-			, g.use_frequency_count 
-			, g.brand 
-			, gt.gear_type_id AS g_id 
-			, gt.gear_name AS g_name 
-			, CASE 
-				WHEN rh.rental_history_id IS NOT NULL AND rh.return_datetime IS NULL THEN 'Rent out'
-				ELSE 'Available' END AS status
-		FROM IST659_M002_jjian03.dbo.activity_type atp 
-		JOIN IST659_M002_jjian03.dbo.relevant_gear rg ON atp.activity_type_id = rg.activity_type_id 
-		JOIN IST659_M002_jjian03.dbo.gear g ON rg.gear_id = g.gear_id 
-		JOIN IST659_M002_jjian03.dbo.gear_type gt ON g.gear_type_id = gt.gear_type_id 
-		LEFT JOIN IST659_M002_jjian03.dbo.rental_history rh ON g.gear_id = rh.gear_id
-		WHERE gt.gear_type_id=#{gearTypeId}
-		AND rh.rental_history_id IS NULL
-		ORDER BY atp.activity_type_id ASC;
+		WITH q AS (
+			SELECT g.gear_id 
+				, g.use_frequency_count 
+				, g.brand 
+				, gt.gear_type_id AS g_id 
+				, gt.gear_name AS g_name 
+				, atp.activity_type_id
+				, CASE 
+					WHEN rh.rental_history_id IS NOT NULL AND rh.return_datetime IS NULL THEN 'Rent out'
+					ELSE 'Available' END AS status
+				, RANK() OVER (PARTITION BY g.gear_id ORDER BY rh.borrow_datetime) AS rn
+			FROM IST659_M002_jjian03.dbo.activity_type atp 
+			JOIN IST659_M002_jjian03.dbo.relevant_gear rg ON atp.activity_type_id = rg.activity_type_id 
+			JOIN IST659_M002_jjian03.dbo.gear g ON rg.gear_id = g.gear_id 
+			JOIN IST659_M002_jjian03.dbo.gear_type gt ON g.gear_type_id = gt.gear_type_id 
+			LEFT JOIN IST659_M002_jjian03.dbo.rental_history rh ON g.gear_id = rh.gear_id
+			WHERE gt.gear_type_id=#{gearTypeId}
+		) SELECT 
+			gear_id 
+			, use_frequency_count 
+			, brand 
+			, g_id 
+			, g_name 
+		FROM q WHERE rn = 1
+		ORDER BY activity_type_id ASC
     </select>
 
     <select id="retrieveReservationByCode" resultType="edu.syr.fge.repository.vo.ReservationVo">
-		SELECT reservation_id AS reservationId 
+		SELECT TOP 1 reservation_id AS reservationId 
 			, organizer_id AS organizerId 
 			, court_id AS courtId 
 			, activity_type_id AS activityTypeId 
@@ -229,13 +238,14 @@
     </insert>
 
     <update id="returnGears">
-         UPDATE IST659_M002_jjian03.dbo.rental_history SET return_datetime=getdate() 
-         FROM IST659_M002_jjian03.dbo.rental_history r 
-         JOIN IST659_M002_jjian03.dbo.gear g ON r.gear_id = g.gear_id 
-         WHERE g.gear_id IN 
+		UPDATE IST659_M002_jjian03.dbo.rental_history SET return_datetime=getdate() 
+		FROM IST659_M002_jjian03.dbo.rental_history r 
+		JOIN IST659_M002_jjian03.dbo.gear g ON r.gear_id = g.gear_id 
+		WHERE g.gear_id IN 
 		<foreach item="gearId" index="index" collection="gearIds" open="(" separator="," close=")">
 			#{gearId}
-		</foreach>;
+		</foreach>
+		AND r.return_datetime IS NULL;
     </update>
 
 	<resultMap type="edu.syr.fge.domain.GearType" id="GearType">

@@ -38,7 +38,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox', 'cspinner'
 			this.loginInfo.fetch({
                 data: this.loginInfo.toJSON(),
                 success: (function (model) {
-                    that.success(that.loginInfo.get("participantId"));
+                    that.success(that.loginInfo.get("email"));
                 }),
                 error: (function (error) {
                     console.log(error);
@@ -47,7 +47,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox', 'cspinner'
             });
 		}, 
 
-		success: function(participantId) {
+		success: function(email) {
 			var that = this;
 			this.header.animate({ marginLeft: '-100%' }, {"duration":400, "queue": false}, function() {
                 $(this).hide();
@@ -58,11 +58,22 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox', 'cspinner'
             });
 			var body = $("body");
 			setTimeout(function () {
-				that.profile.set("participantId", participantId);
-				that.profile.fetch();
-				var dashboard = new DashboardView(body);
-				dashboard.profile = that.profile;
-				dashboard.render();
+//				that.profile.set("email", email);
+				that.profile.fetch({
+					data: {"email": email},
+					success: function (model) {
+//						that.profile = new Profile();
+//						$('#myModal').modal('hide');
+//						bootbox.alert("Save or update done! ");
+//						$("#emailCriteria").val("");
+//						if (that.parent) {
+//							that.parent.search();
+//						}
+						var dashboard = new DashboardView(body);
+						dashboard.profile.attributes = model.attributes[0];
+						dashboard.render();
+	                },
+				});
 			}, 1000);
 		}
 	});

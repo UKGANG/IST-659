@@ -24,9 +24,9 @@ define([ 'backbone'], function(Backbone) {
 
     function mySyncFunction(method, model, options){
     	if ("read" == method 
-    			&& model.get("userId")) {
-    		options.url = model.url + "/" + model.get("userId")
-    	} else if (model.get("userId")) {
+    			&& model.get("participantId")) {
+    		options.url = model.url + "/" + model.get("participantId")
+    	} else if (model.get("participantId")) {
     		method = "update"
     	}
     	return Backbone.sync(method, model, options);

@@ -63,7 +63,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'bootbox'
                 },
                 error: function (model, response) {
                     console.log(response);
-                    bootbox.alert("Search user failed");
+                    bootbox.alert("Save user failed");
                 }
 			});
 		},

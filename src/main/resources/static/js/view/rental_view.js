@@ -94,6 +94,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 				reservationCode: reservationCode,
 				gearIds: gearIds,
 				isRental: that.isRental == 1,
+				rental: that.isRental == 1,
 			}, {
 				success: function (model) {
 					var msg = "";

@@ -28,7 +28,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootbox'
 		maintenanceView: null,
 		membershipView: null,
 		pageAccessView: null,
-		profile: null,
+		profile: new Profile(),
 		profileView: null,
 		events: {
 			"click #wrapper .nav-item" : "redirect"
