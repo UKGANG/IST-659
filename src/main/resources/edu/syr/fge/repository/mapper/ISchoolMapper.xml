@@ -112,7 +112,7 @@
 		JOIN IST659_M002_jjian03.dbo.reservation r ON t.reservation_id = r.reservation_id 
 		JOIN IST659_M002_jjian03.dbo.participant p ON r.organizer_id = p.participant_id 
 		JOIN IST659_M002_jjian03.dbo.activity_type a ON r.activity_type_id = a.activity_type_id 
-    	WHERE CAST(r.reservation_date AS DATE) = #{reservationDate};
+    	WHERE CAST(r.reservation_date AS DATE) = CAST(#{reservationDate} AS DATE);
     </select>
 
     <insert id="createOrganizer" useGeneratedKeys="true" keyProperty="organizerId" keyColumn="organizer_id">
@@ -154,4 +154,32 @@
          UPDATE IST659_M002_jjian03.dbo.reservation SET checked_in=1 
          WHERE reservation_code=#{reservationCode}; 
     </update>
+    
+    
+    
+	<resultMap type="edu.syr.fge.domain.Gear" id="Gear">
+        <id property="gearId" column="gear_id" />
+        <id property="useFrequencyCount" column="use_frequency_count" />
+        <id property="brand" column="brand" />
+        <association property="gearType"
+                     javaType="edu.syr.fge.domain.GearType" columnPrefix="g_" >
+            <id property="gearTypeId" column="id" />
+            <id property="gearTypeName" column="name" />
+        </association>
+    </resultMap>
+
+    <select id="retrieveAvailableGears" resultMap="Gear">
+		SELECT g.gear_id 
+			, g.use_frequency_count 
+			, g.brand 
+			, gt.gear_type_id AS g_id 
+			, gt.gear_name AS g_name 
+		FROM IST659_M002_jjian03.dbo.reservation r 
+		JOIN IST659_M002_jjian03.dbo.activity_type atp ON r.activity_type_id = atp.activity_type_id 
+		JOIN IST659_M002_jjian03.dbo.relevant_gear rg ON atp.activity_type_id = rg.activity_type_id 
+		JOIN IST659_M002_jjian03.dbo.gear g ON rg.gear_id = g.gear_id 
+		JOIN IST659_M002_jjian03.dbo.gear_type gt ON g.gear_type_id = gt.gear_type_id 
+		WHERE r.reservation_code=#{reservationCode}
+		ORDER BY atp.activity_type_id ASC;
+    </select>
 </mapper>

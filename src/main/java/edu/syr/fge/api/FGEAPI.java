@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
@@ -178,11 +179,6 @@ public class FGEAPI {
 	public EventDtoWrapper saveCourtReservations(@RequestBody EventDtoWrapper events) {
 		Date reservationDate = events.getDate();
 		List<Timeslot> existingSlots = mapper.getTimeslots(reservationDate);
-		List<Long> existingCourtIds = existingSlots.stream()
-				.map(Timeslot::getCourt)
-				.map(Court::getCourtId)
-				.distinct()
-				.collect(Collectors.toList());
 		Map<Long, Timeslot> oldTimeslots = existingSlots.stream().collect(Collectors.toMap(Timeslot::getTimeslotId, Function.identity()));
 		List<EventDto> eventDtos = events.getEvents();
 		
@@ -206,29 +202,34 @@ public class FGEAPI {
 				.collect(Collectors.toList());
 
 		mapper.createOrganizer(organizerVo);
-		for (EventDto dto : eventDtos) {
-			if (!existingCourtIds.contains(dto.getLocation())) {
-				ReservationVo reservationVo = new ReservationVo();
-				reservationVo.setCourtId(dto.getLocation());
-				reservationVo.setActivityTypeId(events.getActivityTypeId());
-				reservationVo.setOrganizerId(organizerVo.getOrganizerId());
-				reservationVo.setReservationDate(reservationDate);
-				reservationVo.setReservationCode(reservationCode);
-				reservationVo.setParticipantCount(0);
-				mapper.createCourtReservation(reservationVo);
-				List<Timeslot> tss = newTimeslots.stream()
-					.filter(ts -> ts.getCourt().getCourtId() == dto.getLocation())
+		Map<Long, List<Timeslot>> newEventDtoIndex = newTimeslots.stream()
+				.collect(Collectors.groupingBy(ts -> ts.getCourt().getCourtId()));
+		newEventDtoIndex.forEach((courtId, dtos) -> {
+			ReservationVo reservationVo = new ReservationVo();
+			reservationVo.setCourtId(courtId);
+			reservationVo.setActivityTypeId(events.getActivityTypeId());
+			reservationVo.setOrganizerId(organizerVo.getOrganizerId());
+			reservationVo.setReservationDate(reservationDate);
+			reservationVo.setReservationCode(reservationCode);
+			reservationVo.setParticipantCount(0);
+			mapper.createCourtReservation(reservationVo);
+			List<Timeslot> tss = dtos.stream()
 					.peek(ts -> ts.setReservationId(reservationVo.getReservationId()))
 					.collect(Collectors.toList());
-				mapper.createTimeslots(tss);
-			}
-		}
+			mapper.createTimeslots(tss);
+		});
 
 		if (!remove.isEmpty()) {
 			mapper.removeTimeslots(remove);
 		}
 
-		events.setReservationCode(reservationCode);
+		if (!newEventDtoIndex.isEmpty()) {
+			events.setReservationCode(reservationCode);
+		}
+		Optional.of(reservationDate)
+			.map(mapper::getTimeslots)
+			.map(DtoConverter::convertToEventDtos)
+			.ifPresent(events::setEvents);
 		return events;
 	}
 
@@ -244,24 +245,8 @@ public class FGEAPI {
 	@GetMapping(path = "/reservation/gear", produces = MediaType.APPLICATION_JSON_VALUE)
 	public GearDto retrieveGear(@RequestParam("reservationCode") String reservationCode) {
 		System.out.println(String.format("Retrieve succeed: %s", reservationCode));
-		List<Gear> gears = new ArrayList<>();
-		Gear gear1 = new Gear();
-		Gear gear2 = new Gear();
-		Gear gear3 = new Gear();
-		gear1.setBrand("Nike");
-		gear2.setBrand("Adidas");
-		gear3.setBrand("Abibas");
-		gear1.setGearId(1L);
-		gear2.setGearId(2L);
-		gear3.setGearId(3L);
-		gear1.setGearName("Badminton");
-		gear2.setGearName("Soccer");
-		gear3.setGearName("Cooking");
-		gears.add(gear1);
-		gears.add(gear2);
-		gears.add(gear3);
 		GearDto dto = new GearDto();
-		dto.setGears(gears);
+		dto.setGears(mapper.retrieveAvailableGears(reservationCode));
 		return dto;
 	}
 
@@ -290,24 +275,24 @@ public class FGEAPI {
 	public List<Gear> getGears(@PathVariable("gearId") String id) {
 		System.out.println(String.format("Retrieve succeed: %s", id));
 		List<Gear> gears = new ArrayList<>();
-		Gear gear1 = new Gear();
-		Gear gear2 = new Gear();
-		Gear gear3 = new Gear();
-		gear1.setBrand("Nike");
-		gear2.setBrand("Adidas");
-		gear3.setBrand("Abibas");
-		gear1.setGearId(1L);
-		gear2.setGearId(2L);
-		gear3.setGearId(3L);
-		gear1.setGearName("Badminton");
-		gear2.setGearName("Soccer");
-		gear3.setGearName("Cooking");
-		gear1.setUseFrequencyCount(1);
-		gear2.setUseFrequencyCount(2);
-		gear3.setUseFrequencyCount(3);
-		gears.add(gear1);
-		gears.add(gear2);
-		gears.add(gear3);
+//		Gear gear1 = new Gear();
+//		Gear gear2 = new Gear();
+//		Gear gear3 = new Gear();
+//		gear1.setBrand("Nike");
+//		gear2.setBrand("Adidas");
+//		gear3.setBrand("Abibas");
+//		gear1.setGearId(1L);
+//		gear2.setGearId(2L);
+//		gear3.setGearId(3L);
+//		gear1.setGearName("Badminton");
+//		gear2.setGearName("Soccer");
+//		gear3.setGearName("Cooking");
+//		gear1.setUseFrequencyCount(1);
+//		gear2.setUseFrequencyCount(2);
+//		gear3.setUseFrequencyCount(3);
+//		gears.add(gear1);
+//		gears.add(gear2);
+//		gears.add(gear3);
 
 		return gears;
 	}

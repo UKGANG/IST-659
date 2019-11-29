@@ -22,6 +22,7 @@ define([ 'jquery', 'underscore', 'backbone'
 		courts : new Courts(),
 		courtIdCount: new Map(),
 		reservation : new Reservation(),
+		changed: 0,
 		events: {
 			"click #reserve_btn" : "preReserve",
 			"click #check_in_btn" : "checkIn",
@@ -150,6 +151,7 @@ define([ 'jquery', 'underscore', 'backbone'
 
 
 			$sked.on('event:click.skedtape', function(e/*, api*/) {
+				that.changed = that.changed - 1;
 				var cnt = that.courtIdCount.get(e.detail.locationId);
 				cnt = cnt ? cnt - 1 : 0;
 				that.courtIdCount.set(e.detail.locationId, cnt);
@@ -158,6 +160,7 @@ define([ 'jquery', 'underscore', 'backbone'
 			});
 
 			$sked.on('timeline:click.skedtape', function(e/*, api*/) {
+				that.changed = that.changed + 1;
 				var h = e.detail.date.getHours();
 				var reservation = new Reservation();
 				reservation.set("location", e.detail.locationId);
@@ -191,7 +194,11 @@ define([ 'jquery', 'underscore', 'backbone'
 		},
 
 		preReserve: function() {
-			this.activityTypeView.render();
+			if (this.changed && this.reservations.length == 0) {
+				this.reserve();
+			} else {
+				this.activityTypeView.render();
+			}
 		},
 
 		reserve: function() {
@@ -207,7 +214,12 @@ define([ 'jquery', 'underscore', 'backbone'
                 	that.courtIdCount.clear();
                 	//that.reservations.reset();
                 	//that.render();
-                	bootbox.alert("Success! <br><br>Reservation Code: <br>" + response.reservationCode);
+                	var msg = "Success!";
+                	if (response.reservationCode) {
+                		msg =msg + " <br><br>Reservation Code: <br>" + response.reservationCode;
+                	}
+                	that.changed = 0;
+                	bootbox.alert(msg);
                 	
                 },
                 error: function (error, response) {

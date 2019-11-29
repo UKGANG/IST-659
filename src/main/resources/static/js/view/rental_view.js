@@ -39,8 +39,9 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 //				  }]
 				"columns": [
 					{ data: "gearId" },
-                    { data: "gearName" },
+                    { data: "gearType.gearTypeName" },
                     { data: "brand" },
+                    { data: "useFrequencyCount" },
                     { data: "" }
 				],
 				"columnDefs": [ {
@@ -61,7 +62,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 
 		retrieve: function() {
 			this.rental.fetch({
-				data: this.rental.toJSON(),
+				data: {reservationCode:this.rental.get("reservationCode")},
 				type: 'GET',
                 success: function (model) {
                 	$('#dataTable').dataTable().fnClearTable();

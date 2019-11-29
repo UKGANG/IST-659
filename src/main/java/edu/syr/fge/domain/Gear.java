@@ -3,7 +3,7 @@ package edu.syr.fge.domain;
 public class Gear {
 
 	private Long gearId;
-	private String gearName;
+	private GearType gearType;
 	private String brand;
 	private Integer useFrequencyCount;
 
@@ -15,12 +15,12 @@ public class Gear {
 		this.gearId = gearId;
 	}
 
-	public String getGearName() {
-		return gearName;
+	public GearType getGearType() {
+		return gearType;
 	}
 
-	public void setGearName(String gearName) {
-		this.gearName = gearName;
+	public void setGearType(GearType gearType) {
+		this.gearType = gearType;
 	}
 
 	public String getBrand() {

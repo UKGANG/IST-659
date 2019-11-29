@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 import edu.syr.fge.api.serializer.CourtDto;
 import edu.syr.fge.domain.AvailableActivity;
+import edu.syr.fge.domain.Gear;
 import edu.syr.fge.domain.Participant;
 import edu.syr.fge.domain.Timeslot;
 import edu.syr.fge.repository.vo.OrganizerVo;
@@ -25,6 +26,7 @@ public interface ISchoolMapper {
 	void createTimeslots(@Param("timeslots") List<Timeslot> timeslots);
 	void removeTimeslots(@Param("timeslots") List<Timeslot> timeslots);
 	void checkIn(@Param("reservationCode") String reservationCode);
+	List<Gear> retrieveAvailableGears(@Param("reservationCode") String reservationCode);
 //    List<TestPlan> listAvailableTestPlans(@Param("requestedDate") Date requestDate, @Param("currentDate") Date currentDate);
 //
 //    List<TestPlan> findTestPlans(@Param("planIds") List<Long> planIds);

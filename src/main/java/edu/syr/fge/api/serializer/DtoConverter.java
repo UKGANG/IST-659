@@ -1,14 +1,10 @@
 package edu.syr.fge.api.serializer;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import edu.syr.fge.domain.ActivityType;
 import edu.syr.fge.domain.Court;
-import edu.syr.fge.domain.CourtReservation;
 import edu.syr.fge.domain.Participant;
 import edu.syr.fge.domain.Timeslot;
 
@@ -17,6 +13,7 @@ public class DtoConverter {
 	public static List<EventDto> convertToEventDtos(List<Timeslot> source) {
 		return source.stream().map(ts -> {
 			EventDto dto = new EventDto();
+			dto.setTimeslotId(ts.getTimeslotId());
 			dto.setLocation(ts.getCourt().getCourtId());
 			dto.setParticipantId(ts.getParticipant().getParticipantId());
 			dto.setActivityTypeId(ts.getActivityType().getActivityTypeId());
