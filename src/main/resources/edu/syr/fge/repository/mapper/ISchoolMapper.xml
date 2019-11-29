@@ -157,10 +157,11 @@
     
     
     
-	<resultMap type="edu.syr.fge.domain.Gear" id="Gear">
+	<resultMap type="edu.syr.fge.repository.vo.GearVo" id="Gear">
         <id property="gearId" column="gear_id" />
         <id property="useFrequencyCount" column="use_frequency_count" />
         <id property="brand" column="brand" />
+        <id property="status" column="status" />
         <association property="gearType"
                      javaType="edu.syr.fge.domain.GearType" columnPrefix="g_" >
             <id property="gearTypeId" column="id" />
@@ -168,18 +169,53 @@
         </association>
     </resultMap>
 
-    <select id="retrieveAvailableGears" resultMap="Gear">
+    <select id="retrieveGears" resultMap="Gear">
 		SELECT g.gear_id 
 			, g.use_frequency_count 
 			, g.brand 
 			, gt.gear_type_id AS g_id 
 			, gt.gear_name AS g_name 
+			, CASE 
+				WHEN rh.rental_history_id IS NOT NULL AND rh.return_datetime IS NULL THEN 'Rent out'
+				ELSE 'Available' END AS status
 		FROM IST659_M002_jjian03.dbo.reservation r 
 		JOIN IST659_M002_jjian03.dbo.activity_type atp ON r.activity_type_id = atp.activity_type_id 
 		JOIN IST659_M002_jjian03.dbo.relevant_gear rg ON atp.activity_type_id = rg.activity_type_id 
 		JOIN IST659_M002_jjian03.dbo.gear g ON rg.gear_id = g.gear_id 
 		JOIN IST659_M002_jjian03.dbo.gear_type gt ON g.gear_type_id = gt.gear_type_id 
+		LEFT JOIN IST659_M002_jjian03.dbo.rental_history rh ON g.gear_id = rh.gear_id
 		WHERE r.reservation_code=#{reservationCode}
 		ORDER BY atp.activity_type_id ASC;
     </select>
+
+    <select id="retrieveReservationByCode" resultType="edu.syr.fge.repository.vo.ReservationVo">
+		SELECT reservation_id AS reservationId 
+			, organizer_id AS organizerId 
+			, court_id AS courtId 
+			, activity_type_id AS activityTypeId 
+			, reservation_code AS reservationCode 
+			, reservation_date AS reservationDate 
+			, participant_count AS participantCount 
+		FROM IST659_M002_jjian03.dbo.reservation 
+		WHERE reservation_code=#{reservationCode};
+    </select>
+
+    <insert id="rentGears" useGeneratedKeys="true">
+		INSERT INTO IST659_M002_jjian03.dbo.rental_history
+		(organizer_id, gear_id, borrow_datetime, return_datetime)
+		VALUES
+        <foreach item="gearId" index="index" collection="gearIds" separator=",">
+			(#{organizerId}, #{gearId}, getdate(), NULL)
+		</foreach>;
+    </insert>
+
+    <update id="returnGears">
+         UPDATE IST659_M002_jjian03.dbo.rental_history SET return_datetime=getdate() 
+         FROM IST659_M002_jjian03.dbo.rental_history r 
+         JOIN IST659_M002_jjian03.dbo.gear g ON r.gear_id = g.gear_id 
+         WHERE g.gear_id IN 
+		<foreach item="gearId" index="index" collection="gearIds" open="(" separator="," close=")">
+			#{gearId}
+		</foreach>;
+    </update>
 </mapper>

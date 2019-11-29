@@ -2,9 +2,10 @@ package edu.syr.fge.api.serializer;
 
 import java.util.List;
 
-public class GearRental {
+public class GearRentalDto {
 
 	private String reservationCode;
+	private boolean isRental;
 	private List<Long> gearIds;
 
 	public String getReservationCode() {
@@ -13,6 +14,14 @@ public class GearRental {
 
 	public void setReservationCode(String reservationCode) {
 		this.reservationCode = reservationCode;
+	}
+
+	public boolean isRental() {
+		return isRental;
+	}
+
+	public void setRental(boolean isRental) {
+		this.isRental = isRental;
 	}
 
 	public List<Long> getGearIds() {

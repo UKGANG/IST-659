@@ -16,7 +16,7 @@
 		<a href="#" id="retrieve_reservation_btn" class="btn bg-orange"><i class="fas fa-search"></i> Retrieve available gears</a>
     </div>
     <div class="col-md-1 form-inline">
-    	<a href="#" id="rent_btn" class="btn bg-orange"><i class="fas fa-hand-point-down"></i> Rent</a>
+    	<a href="#" id="rent_btn" class="btn bg-orange"><i class="fas fa-hand-point-down"></i> <div id="rentLabel"></div></a>
     </div>
 </div>
           <div class="card-body">
@@ -28,6 +28,7 @@
                     <th>Gear Name</th>
                     <th>Brand</th>
                     <th>Time Used</th>
+                    <th>Status</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -37,6 +38,7 @@
                     <th>Gear Name</th>
                     <th>Brand</th>
                     <th>Time Used</th>
+                    <th>Status</th>
                     <th></th>
                   </tr>
                 </tfoot>
@@ -47,3 +49,17 @@
           </div>
           <div class="card-footer small text-muted">Syracuse University</div>
         </div>
+
+<div id="rentalModal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" style="margin:auto;margin-top:15%;width:50%;padding:10px;">
+  <div class="btn-group">
+    <a class="btn btn-primary dropdown-toggle bg-orange" data-toggle="dropdown" style="cursor:hand;">-- Rent or Return? -- <span class="caret"></span></a>
+    <ul class="dropdown-menu">
+      		<li class="dropdown-item" data="1">Rent</li>
+      		<li class="dropdown-item" data="0">Return</li>
+    </ul>
+  </div>
+    </div>
+  </div>
+</div>

@@ -2,7 +2,6 @@ package edu.syr.fge.api;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,21 +35,20 @@ import edu.syr.fge.api.serializer.EventDto;
 import edu.syr.fge.api.serializer.EventDtoWrapper;
 import edu.syr.fge.api.serializer.GearDto;
 import edu.syr.fge.api.serializer.GearIdsDto;
-import edu.syr.fge.api.serializer.GearRental;
+import edu.syr.fge.api.serializer.GearRentalDto;
 import edu.syr.fge.api.serializer.PageTypeDto;
 import edu.syr.fge.api.serializer.ReservationDto;
 import edu.syr.fge.api.serializer.RoleDto;
 import edu.syr.fge.api.serializer.UserDto;
 import edu.syr.fge.domain.ActivityType;
 import edu.syr.fge.domain.AvailableActivity;
-import edu.syr.fge.domain.Court;
-import edu.syr.fge.domain.CourtReservation;
 import edu.syr.fge.domain.Gear;
 import edu.syr.fge.domain.GearType;
 import edu.syr.fge.domain.Participant;
 import edu.syr.fge.domain.Timeslot;
 import edu.syr.fge.exception.FGEException;
 import edu.syr.fge.repository.mapper.ISchoolMapper;
+import edu.syr.fge.repository.vo.GearVo;
 import edu.syr.fge.repository.vo.OrganizerVo;
 import edu.syr.fge.repository.vo.ReservationVo;
 
@@ -116,62 +114,6 @@ public class FGEAPI {
 		List<Timeslot> timeslots = mapper.getTimeslots(date);
 		
 		return DtoConverter.convertToEventDtos(timeslots);
-	}
-
-	private List<CourtReservation> mockResult1() {
-		List<CourtReservation> courtReservations = new ArrayList<>();
-		CourtReservation courtReservation1 = new CourtReservation();
-		CourtReservation courtReservation2 = new CourtReservation();
-		List<Timeslot> timeslots1 = new ArrayList<>();
-		List<Timeslot> timeslots2 = new ArrayList<>();
-		Timeslot timeslotA1 = new Timeslot();
-		Timeslot timeslotA2 = new Timeslot();
-		Timeslot timeslotB1 = new Timeslot();
-		Timeslot timeslotB2 = new Timeslot();
-		timeslots1.add(timeslotA1);
-		timeslots1.add(timeslotA2);
-		timeslots2.add(timeslotB1);
-		timeslots2.add(timeslotB2);
-		timeslotA1.setTimeslotId(1L);
-		timeslotA2.setTimeslotId(2L);
-		timeslotB1.setTimeslotId(3L);
-		timeslotB2.setTimeslotId(4L);
-//		timeslotA1.setParticipantId(1L);
-//		timeslotA2.setParticipantId(1L);
-//		timeslotB1.setParticipantId(1L);
-//		timeslotB2.setParticipantId(1L);
-		timeslotA1.setReservationId(1L);
-		timeslotA2.setReservationId(2L);
-		timeslotB1.setReservationId(3L);
-		timeslotB2.setReservationId(4L);
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.HOUR_OF_DAY, 10);
-		timeslotA1.setStartDatetime(calendar.getTime());
-		calendar.set(Calendar.HOUR_OF_DAY, 13);
-		timeslotA2.setStartDatetime(calendar.getTime());
-		calendar.set(Calendar.HOUR_OF_DAY, 15);
-		timeslotB1.setStartDatetime(calendar.getTime());
-		calendar.set(Calendar.HOUR_OF_DAY, 17);
-		timeslotB2.setStartDatetime(calendar.getTime());
-		calendar.set(Calendar.HOUR_OF_DAY, 11);
-		timeslotA1.setEndDatetime(calendar.getTime());
-		calendar.set(Calendar.HOUR_OF_DAY, 14);
-		timeslotA2.setEndDatetime(calendar.getTime());
-		calendar.set(Calendar.HOUR_OF_DAY, 16);
-		timeslotB1.setEndDatetime(calendar.getTime());
-		calendar.set(Calendar.HOUR_OF_DAY, 18);
-		timeslotB2.setEndDatetime(calendar.getTime());
-		Court c1 = new Court();
-		Court c2 = new Court();
-		c1.setCourtId(1L);
-		c2.setCourtId(1L);
-//		courtReservation1.setCourt(c1);
-//		courtReservation1.setTimeslots(timeslots1);
-//		courtReservation2.setCourt(c2);
-//		courtReservation2.setTimeslots(timeslots2);
-		courtReservations.add(courtReservation1);
-		courtReservations.add(courtReservation2);
-		return courtReservations;
 	}
 
 	@Transactional
@@ -243,17 +185,40 @@ public class FGEAPI {
 
 	// Refactor to path
 	@GetMapping(path = "/reservation/gear", produces = MediaType.APPLICATION_JSON_VALUE)
-	public GearDto retrieveGear(@RequestParam("reservationCode") String reservationCode) {
+	public GearDto retrieveGear(@RequestParam("reservationCode") String reservationCode, @RequestParam("isRental") boolean isRental) {
 		System.out.println(String.format("Retrieve succeed: %s", reservationCode));
 		GearDto dto = new GearDto();
-		dto.setGears(mapper.retrieveAvailableGears(reservationCode));
+		List<GearVo> gears = mapper.retrieveGears(reservationCode);
+		gears = gears.stream().filter(g -> {
+			if (isRental) {
+				return "Available".equals(g.getStatus());
+			} else {
+				return "Rent out".equals(g.getStatus());
+			}
+		}).collect(Collectors.toList());
+		dto.setGears(gears);
 		return dto;
 	}
 
 	@PostMapping(path = "/reservation/gear", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public GearRental rentGear(@RequestBody GearRental gearRental) {
+	public GearRentalDto rentGear(@RequestBody GearRentalDto gearRental) {
 		System.out.println(String.format("Renting for reservation succeed: %s", gearRental.getReservationCode()));
 		System.out.println(String.format("Gears: %s", gearRental.getGearIds().stream().map(String::valueOf).collect(Collectors.joining(","))));
+		ReservationVo reservationVo = mapper.retrieveReservationByCode(gearRental.getReservationCode());
+		if (gearRental.isRental()) {
+			return this.rent(gearRental, reservationVo.getOrganizerId());
+		} else {
+			return this.returnBack(gearRental);
+		}
+	}
+
+	private GearRentalDto rent(GearRentalDto gearRental, Long organizerId) {
+		mapper.rentGears(gearRental.getGearIds(), organizerId);
+		return gearRental;
+	}
+
+	private GearRentalDto returnBack(GearRentalDto gearRental) {
+		mapper.returnGears(gearRental.getGearIds());
 		return gearRental;
 	}
 

@@ -10,10 +10,12 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		template : _.template(RentalHTML),
 		rental : new Rental(),
 		gearRental: new GearRental(),
+		isRental: null,
 		events: {
             "click #retrieve_reservation_btn" : "retrieve",
             "click #rent_btn" : "rent",
             "change #reservationCode" : "setReservationCode",
+			"click .dropdown-menu li" : "switchDropdown",
         },
 
         setReservationCode : function(e) {
@@ -28,6 +30,8 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 
 		render: function() {
 			this.$el.html(this.template());
+			$("#rentalModal").modal();
+			_.bindAll(this, "switchDropdown");
 			var table = $('#dataTable').DataTable({
 				"paging": false,
 				"searching": false,
@@ -42,6 +46,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
                     { data: "gearType.gearTypeName" },
                     { data: "brand" },
                     { data: "useFrequencyCount" },
+                    { data: "status" },
                     { data: "" }
 				],
 				"columnDefs": [ {
@@ -61,12 +66,18 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		},
 
 		retrieve: function() {
+			var that = this;
 			this.rental.fetch({
-				data: {reservationCode:this.rental.get("reservationCode")},
+				data: {
+					reservationCode:this.rental.get("reservationCode"),
+					isRental: that.isRental == 1,
+				},
 				type: 'GET',
                 success: function (model) {
                 	$('#dataTable').dataTable().fnClearTable();
-                	$('#dataTable').dataTable().fnAddData(model.attributes.gears);
+                	if (model.attributes.gears.length) {
+                		$('#dataTable').dataTable().fnAddData(model.attributes.gears);
+                	}
                 },
                 error: function (model, response) {
                     console.log(response);
@@ -76,14 +87,23 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		},
 
 		rent: function() {
-			var gearIds = $.makeArray($("input[type=checkbox]")).map(function(i) {return i.value;})
+			var that = this;
+			var gearIds = $.makeArray($("input:checked")).map(function(i) {return i.value;})
 			var reservationCode = this.rental.get("reservationCode");
 			this.gearRental.save({
 				reservationCode: reservationCode,
-				gearIds: gearIds
+				gearIds: gearIds,
+				isRental: that.isRental == 1,
 			}, {
 				success: function (model) {
-                	bootbox.alert("Rental success");
+					var msg = "";
+					if (that.isRental == 1) {
+						msg = "Rental";
+					} else {
+						msg = "Return";
+					}
+					msg  = msg + " success";
+                	bootbox.alert(msg);
                 	$('#dataTable').dataTable().fnClearTable();
                 },
                 error: function (model, response) {
@@ -91,7 +111,22 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
                     bootbox.alert("Rental failed");
                 }
 			})
-		}
+		}, 
+
+		switchDropdown: function(e) {
+			var that = this;
+			var pageTypeId = "";
+			if (e) {
+				that.isRental = parseInt($(e.currentTarget).attr("data"));
+				if (that.isRental) {
+					$("#rentLabel").html("Rent");
+				} else {
+					$("#rentLabel").html("Return");
+				}
+				$("#rentalModal").modal("hide");
+			}
+		},
+
 	});
 
 	return RentalView;
