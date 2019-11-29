@@ -291,7 +291,8 @@
 			<when test="email == null || email.length() == 0">
 			</when>
 			<otherwise>
-				WHERE email=#{email}
+				<bind name="widecard_email" value="'%' + email + '%'" />
+				WHERE email LIKE #{widecard_email}
 			</otherwise>
 		</choose>;
     </select>
@@ -349,6 +350,7 @@
         <association property="user"
                      javaType="edu.syr.fge.api.serializer.UserDto" columnPrefix="p_" >
             <id property="participantId" column="id" />
+            <id property="email" column="email" />
         </association>
     </resultMap>
 
@@ -358,6 +360,7 @@
 			, pt.page_type_id AS pt_id
 			, pt.page_name AS pt_name 
 			, p.participant_id AS p_id 
+			, p.email AS p_email 
 		FROM IST659_M002_jjian03.dbo.role r 
 		JOIN IST659_M002_jjian03.dbo.page_type pt ON r.page_type_id = pt.page_type_id 
 		JOIN IST659_M002_jjian03.dbo.participant p ON r.participant_id = p.participant_id 
@@ -370,4 +373,15 @@
 		</choose>
 		ORDER BY pt.page_type_id ASC;
     </select>
+
+    <insert id="createPageAccess" useGeneratedKeys="true">
+		INSERT INTO IST659_M002_jjian03.dbo.[role]
+		(page_type_id, participant_id, is_enabled)
+		VALUES(#{role.pageType.pageTypeId}, #{role.user.participantId}, 1);
+    </insert>
+
+    <delete id="removePageAccess">
+        DELETE FROM IST659_M002_jjian03.dbo.role 
+        WHERE role_id = #{roleId}; 
+    </delete>
 </mapper>

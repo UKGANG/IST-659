@@ -44,5 +44,7 @@ public interface ISchoolMapper {
 	void updateParticipant(@Param("participant") UserDto dto);
 	List<PageTypeDto> retrievePageTypes();
 	List<RoleDto> getPageAccessList(@Param("pageTypeId") Long pageTypeId);
+	void createPageAccess(@Param("role") RoleDto dto);
+	void removePageAccess(@Param("roleId") Long roleId);
 
 }

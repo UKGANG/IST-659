@@ -34,13 +34,13 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 					},
 				    list: {
 				    	onClickEvent: function(e) {
-				            var userId = $("#searchDropdown").getSelectedItemData().userId;
-				            that.role.get("user").set("userId", userId); 
+				            var participantId = $("#searchDropdown").getSelectedItemData().participantId;
+				            that.role.get("user").set("participantId", participantId); 
 				        },
 				    },
 					getValue: function(element) {
 						return element.firstName + ", " 
-							+ element.middleName + ", "
+							+ (element.middleName ? element.middleName + ", " : "")
 							+ element.lastName + " | "
 							+ element.email;
 					},
@@ -112,18 +112,25 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 		        	return e.get("roleId") == rowData.roleId;
 		        })[0];
 
-		        role.destroy();
+		        role.destroy({
+					success: function (model) {
+						that.refreshGrid();
+	                }, error: function (model, response) {
+						bootbox.alert("Remove failed! ");
+	                },
+		        });
 		    });
 
 		},
 
 		grantAccess : function() {
 			var that = this;
-			this.role.save("roleId", null);
+			this.role.set("roleId", null);
 			this.role.save(null, {
 				success: function (model) {
 					bootbox.alert("Add success! ");
-					that.role.clone(that.role.defaults());
+					that.role.attributes = that.role.defaults();
+					that.role.set("roleId", null)
                 }, error: function (model, response) {
 					bootbox.alert("Add failed! ");
                 },

@@ -1,6 +1,5 @@
 package edu.syr.fge.api;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -287,15 +286,17 @@ public class FGEAPI {
 	}
 
 	@DeleteMapping(path = "/role/{pageTypeId}")
-	public Long deleteRole(@PathVariable("pageTypeId") Long pageTypeId) {
-		System.out.println(String.format("Received pageTypeId: %d", pageTypeId));
-		return pageTypeId;
+	public Long deleteRole(@PathVariable("pageTypeId") Long roleId) {
+		System.out.println(String.format("Received role id: %d", roleId));
+		mapper.removePageAccess(roleId);
+		return roleId;
 	}
 
 	@PostMapping(path = "/role")
 	public RoleDto createRole(@RequestBody RoleDto dto) {
 		System.out.println(String.format("Create role: user id - %d, page type id - %d"
 				, dto.getUser().getParticipantId(), dto.getPageType().getPageTypeId()));
+		mapper.createPageAccess(dto);
 		return dto;
 	}
 
