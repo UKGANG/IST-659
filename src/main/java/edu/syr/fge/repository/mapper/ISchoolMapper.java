@@ -33,6 +33,7 @@ public interface ISchoolMapper {
 	void rentGears(@Param("gearIds") List<Long> gearIds, @Param("organizerId") Long organizerId);
 	void returnGears(@Param("gearIds") List<Long> gearIds);
 	List<GearType> getGearTypes();
+	void refrubish(@Param("gearIds") List<Long> gearIds);
 //    List<TestPlan> listAvailableTestPlans(@Param("requestedDate") Date requestDate, @Param("currentDate") Date currentDate);
 //
 //    List<TestPlan> findTestPlans(@Param("planIds") List<Long> planIds);

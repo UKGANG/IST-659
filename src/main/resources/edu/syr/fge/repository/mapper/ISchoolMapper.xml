@@ -251,4 +251,12 @@
 		FROM IST659_M002_jjian03.dbo.gear_type
 		ORDER BY gear_type_id ASC;
     </select>
+
+    <update id="refrubish">
+         UPDATE IST659_M002_jjian03.dbo.gear SET use_frequency_count = 0
+         WHERE gear_id IN 
+		<foreach item="gearId" index="index" collection="gearIds" open="(" separator="," close=")">
+			#{gearId}
+		</foreach>;
+    </update>
 </mapper>

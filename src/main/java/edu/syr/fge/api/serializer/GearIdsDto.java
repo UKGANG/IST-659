@@ -3,13 +3,13 @@ package edu.syr.fge.api.serializer;
 import java.util.List;
 
 public class GearIdsDto {
-	private List<String> gearIds;
+	private List<Long> gearIds;
 
-	public List<String> getGearIds() {
+	public List<Long> getGearIds() {
 		return gearIds;
 	}
 
-	public void setGearIds(List<String> gearIds) {
+	public void setGearIds(List<Long> gearIds) {
 		this.gearIds = gearIds;
 	}
 

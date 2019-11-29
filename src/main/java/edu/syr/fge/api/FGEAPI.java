@@ -235,6 +235,7 @@ public class FGEAPI {
 	@PutMapping(path = "/gear")
 	public GearIdsDto renewGears(@RequestBody GearIdsDto dto) {
 		System.out.println(String.format("Refrubish: %d", dto.getGearIds().size()));
+		mapper.refrubish(dto.getGearIds());
 		return dto;
 	}
 
