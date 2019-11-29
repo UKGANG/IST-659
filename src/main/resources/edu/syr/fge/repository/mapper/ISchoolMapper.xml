@@ -188,6 +188,25 @@
 		ORDER BY atp.activity_type_id ASC;
     </select>
 
+    <select id="retrieveGearsByType" resultMap="Gear">
+		SELECT g.gear_id 
+			, g.use_frequency_count 
+			, g.brand 
+			, gt.gear_type_id AS g_id 
+			, gt.gear_name AS g_name 
+			, CASE 
+				WHEN rh.rental_history_id IS NOT NULL AND rh.return_datetime IS NULL THEN 'Rent out'
+				ELSE 'Available' END AS status
+		FROM IST659_M002_jjian03.dbo.activity_type atp 
+		JOIN IST659_M002_jjian03.dbo.relevant_gear rg ON atp.activity_type_id = rg.activity_type_id 
+		JOIN IST659_M002_jjian03.dbo.gear g ON rg.gear_id = g.gear_id 
+		JOIN IST659_M002_jjian03.dbo.gear_type gt ON g.gear_type_id = gt.gear_type_id 
+		LEFT JOIN IST659_M002_jjian03.dbo.rental_history rh ON g.gear_id = rh.gear_id
+		WHERE gt.gear_type_id=#{gearTypeId}
+		AND rh.rental_history_id IS NULL
+		ORDER BY atp.activity_type_id ASC;
+    </select>
+
     <select id="retrieveReservationByCode" resultType="edu.syr.fge.repository.vo.ReservationVo">
 		SELECT reservation_id AS reservationId 
 			, organizer_id AS organizerId 
@@ -218,4 +237,18 @@
 			#{gearId}
 		</foreach>;
     </update>
+
+	<resultMap type="edu.syr.fge.domain.GearType" id="GearType">
+        <id property="gearTypeId" column="gear_type_id" />
+        <id property="gearTypeName" column="gear_name" />
+    </resultMap>
+
+
+    <select id="getGearTypes" resultMap="GearType">
+		SELECT 
+			gear_type_id
+			, gear_name
+		FROM IST659_M002_jjian03.dbo.gear_type
+		ORDER BY gear_type_id ASC;
+    </select>
 </mapper>

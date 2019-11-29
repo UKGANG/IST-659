@@ -42,7 +42,6 @@ import edu.syr.fge.api.serializer.RoleDto;
 import edu.syr.fge.api.serializer.UserDto;
 import edu.syr.fge.domain.ActivityType;
 import edu.syr.fge.domain.AvailableActivity;
-import edu.syr.fge.domain.Gear;
 import edu.syr.fge.domain.GearType;
 import edu.syr.fge.domain.Participant;
 import edu.syr.fge.domain.Timeslot;
@@ -224,42 +223,13 @@ public class FGEAPI {
 
 	@GetMapping(path = "/gearType")
 	public List<GearType> getGearTypes() {
-		List<GearType> returns = new ArrayList<>();
-		GearType gearType1 = new GearType();
-		GearType gearType2 = new GearType();
-		gearType1.setGearTypeId(1L);
-		gearType2.setGearTypeId(2L);
-		gearType1.setGearTypeName("GearTypeName1");
-		gearType2.setGearTypeName("GearTypeName2");
-		returns.add(gearType1);
-		returns.add(gearType2);
-		return returns;
+		return mapper.getGearTypes();
 	}
 
 	@GetMapping(path = "/gear/{gearId}")
-	public List<Gear> getGears(@PathVariable("gearId") String id) {
+	public List<GearVo> getGears(@PathVariable("gearId") String id) {
 		System.out.println(String.format("Retrieve succeed: %s", id));
-		List<Gear> gears = new ArrayList<>();
-//		Gear gear1 = new Gear();
-//		Gear gear2 = new Gear();
-//		Gear gear3 = new Gear();
-//		gear1.setBrand("Nike");
-//		gear2.setBrand("Adidas");
-//		gear3.setBrand("Abibas");
-//		gear1.setGearId(1L);
-//		gear2.setGearId(2L);
-//		gear3.setGearId(3L);
-//		gear1.setGearName("Badminton");
-//		gear2.setGearName("Soccer");
-//		gear3.setGearName("Cooking");
-//		gear1.setUseFrequencyCount(1);
-//		gear2.setUseFrequencyCount(2);
-//		gear3.setUseFrequencyCount(3);
-//		gears.add(gear1);
-//		gears.add(gear2);
-//		gears.add(gear3);
-
-		return gears;
+		return mapper.retrieveGearsByType(Long.parseLong(id));
 	}
 
 	@PutMapping(path = "/gear")

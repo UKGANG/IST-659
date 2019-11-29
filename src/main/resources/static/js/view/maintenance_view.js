@@ -31,7 +31,7 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 				"searching": false,
 				"columns": [
 					{ data: "gearId" },
-                    { data: "gearName" },
+                    { data: "gearType.gearTypeName" },
                     { data: "brand" },
                     { data: "useFrequencyCount" },
                     { data: "" }
@@ -57,11 +57,13 @@ define([ 'jquery', 'underscore', 'backbone', 'bootstrap4.bundle', 'jquery.dataTa
 
 		refreshGrid: function() {
 			$('#refurbishTable').dataTable().fnClearTable();
-        	$('#refurbishTable').dataTable().fnAddData(this.gears);
+        	if (this.gears.length) {
+        		$('#refurbishTable').dataTable().fnAddData(this.gears);
+        	}
 		},
 
 		refurbish: function() {
-			var gearIds = $.makeArray($("input[type=checkbox]")).map(function(i) {return i.value;})
+			var gearIds = $.makeArray($("input:checked")).map(function(i) {return i.value;})
 			new Gears().save({
 				attrs: {
 					gearIds: gearIds
